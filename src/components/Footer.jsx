@@ -140,10 +140,6 @@ const Footer = () => {
 
   return (
     <footer className="footer">
-      {/* =========================================
-          CTA SECTION
-      ========================================= */}
-
       <motion.div
         className="footer-cta"
         initial={{
@@ -209,16 +205,8 @@ const Footer = () => {
         </div>
       </motion.div>
 
-      {/* =========================================
-          MAIN FOOTER
-      ========================================= */}
-
       <div className="footer-main">
         <div className="footer-grid">
-          {/* =======================================
-              BRAND
-          ======================================= */}
-
           <motion.div
             className="footer-brand-column"
             initial={{
@@ -276,8 +264,6 @@ const Footer = () => {
               unforgettable moments.
             </p>
 
-            {/* SOCIAL LINKS */}
-
             <div className="footer-socials">
               <a
                 href={instagramUrl}
@@ -312,10 +298,6 @@ const Footer = () => {
               </a>
             </div>
           </motion.div>
-
-          {/* =======================================
-              QUICK LINKS
-          ======================================= */}
 
           <motion.div
             className="footer-column"
@@ -352,10 +334,6 @@ const Footer = () => {
             </nav>
           </motion.div>
 
-          {/* =======================================
-              SERVICES
-          ======================================= */}
-
           <motion.div
             className="footer-column"
             initial={{
@@ -391,10 +369,6 @@ const Footer = () => {
             </nav>
           </motion.div>
 
-          {/* =======================================
-              CONTACT
-          ======================================= */}
-
           <motion.div
             className="footer-column footer-contact-column"
             initial={{
@@ -417,7 +391,7 @@ const Footer = () => {
             <h3>Let's Connect</h3>
 
             <div className="footer-contact-list">
-              <a href="tel:+19785550123">
+              <a href="tel:+16176500061">
                 <span className="contact-icon">
                   <Phone
                     size={17}
@@ -427,7 +401,7 @@ const Footer = () => {
 
                 <span className="footer-contact-text">
                   <small>Call Me</small>
-                  (978) 555-0123
+                  617-650-0061
                 </span>
               </a>
 
@@ -495,10 +469,6 @@ const Footer = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* =========================================
-            NEWSLETTER
-        ========================================= */}
 
         <motion.div
           className="footer-newsletter"
@@ -607,10 +577,6 @@ const Footer = () => {
           )}
         </motion.div>
       </div>
-
-      {/* =========================================
-          BOTTOM BAR
-      ========================================= */}
 
       <div className="footer-bottom">
         <div className="footer-bottom-inner">

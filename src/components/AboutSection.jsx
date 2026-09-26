@@ -15,8 +15,8 @@ const contactDetails = [
   {
     icon: Phone,
     label: "Call or Text",
-    value: "(978) 555-0123",
-    href: "tel:+19785550123",
+    value: "617-650-0061",
+    href: "tel:+16176500061",
   },
   {
     icon: Mail,
@@ -26,6 +26,9 @@ const contactDetails = [
   },
 ];
 
+const instagramUrl =
+  "https://www.instagram.com/ifys_signature_fried_rice?stkn=MW0xdmZvZng0cGx3cA==";
+
 const AboutSection = () => {
   return (
     <section id="about" className="about-section">
@@ -34,10 +37,6 @@ const AboutSection = () => {
       <div className="about-background-circle about-circle-two" />
 
       <div className="about-container">
-        {/* =========================================
-            ABOUT COPY
-        ========================================= */}
-
         <motion.div
           className="about-copy"
           initial={{
@@ -112,10 +111,6 @@ const AboutSection = () => {
           </div>
         </motion.div>
 
-        {/* =========================================
-            FOOD IMAGE
-        ========================================= */}
-
         <motion.div
           className="about-image-wrap"
           initial={{
@@ -166,11 +161,6 @@ const AboutSection = () => {
             strokeWidth={1.5}
           />
         </motion.div>
-
-        {/* =========================================
-            CONTACT INFORMATION CARD
-            This is NOT the main ContactSection.
-        ========================================= */}
 
         <motion.aside
           className="contact-card"
@@ -257,7 +247,9 @@ const AboutSection = () => {
 
               <div className="socials">
                 <a
-                  href="#"
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label="Instagram"
                 >
                   <Instagram

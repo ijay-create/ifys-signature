@@ -8,6 +8,7 @@ import {
 import Home from "./pages/Home";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import WhatsAppFloat from "./components/WhatsAppFloat";
 
 const App = () => {
   return (
@@ -28,6 +29,8 @@ const App = () => {
           element={<OrderConfirmation />}
         />
       </Routes>
+
+      <WhatsAppFloat />
     </BrowserRouter>
   );
 };
