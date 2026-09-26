@@ -25,18 +25,55 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
+/*
+  ALLOWED FRONTEND ORIGINS
+*/
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://ifys-signature.vercel.app",
+];
+
+if (process.env.CLIENT_URL) {
+  allowedOrigins.push(process.env.CLIENT_URL);
+}
+
+/*
+  CORS
+*/
+
 app.use(
   cors({
-    origin:
-      process.env.CLIENT_URL ||
-      "http://localhost:5173",
-  }),
+    origin: (origin, callback) => {
+      /*
+        Requests without an Origin header can be allowed.
+        This is useful for server-to-server requests such as
+        Stripe webhooks.
+      */
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.error(`CORS blocked origin: ${origin}`);
+
+      return callback(
+        new Error(`CORS blocked origin: ${origin}`)
+      );
+    },
+    credentials: true,
+  })
 );
 
 /*
   IMPORTANT:
-  Stripe webhook must come before express.json()
-  because Stripe requires the raw request body.
+  Stripe webhook must come BEFORE express.json()
+  because Stripe requires the raw request body
+  for signature verification.
 */
 
 app.use("/api/webhook", webhookRoutes);
@@ -68,19 +105,13 @@ app.use("/api/stripe", stripeRoutes);
   NEWSLETTER
 */
 
-app.use(
-  "/api/newsletter",
-  newsletterRoutes,
-);
+app.use("/api/newsletter", newsletterRoutes);
 
 /*
   CONTACT / QUOTE REQUESTS
 */
 
-app.use(
-  "/api/contact",
-  contactRoutes,
-);
+app.use("/api/contact", contactRoutes);
 
 /*
   404 HANDLER
@@ -114,14 +145,19 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(
-    `Ify's Signature API running on http://localhost:${PORT}`,
+    `Ify's Signature API running on http://localhost:${PORT}`
   );
 
   console.log(
-    `Newsletter endpoint: http://localhost:${PORT}/api/newsletter/subscribe`,
+    `Newsletter endpoint: http://localhost:${PORT}/api/newsletter/subscribe`
   );
 
   console.log(
-    `Quote endpoint: http://localhost:${PORT}/api/contact/quote`,
+    `Quote endpoint: http://localhost:${PORT}/api/contact/quote`
+  );
+
+  console.log(
+    "Allowed frontend origins:",
+    allowedOrigins
   );
 });
