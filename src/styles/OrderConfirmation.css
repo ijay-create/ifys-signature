@@ -1,0 +1,446 @@
+/* =========================================
+   ORDER CONFIRMATION
+========================================= */
+
+.confirmation-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 60px 0 80px;
+
+  background: #faf6ee;
+}
+
+.confirmation-container {
+  width: min(650px, calc(100% - 40px));
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+/* =========================================
+   SUCCESS ICON
+========================================= */
+
+.confirmation-icon {
+  width: 78px;
+  height: 78px;
+
+  display: grid;
+  place-items: center;
+
+  margin-bottom: 21px;
+
+  border: 1px solid rgba(212, 168, 67, 0.45);
+  border-radius: 50%;
+
+  background: rgba(212, 168, 67, 0.1);
+
+  color: var(--accent-gold);
+
+  box-shadow:
+    0 8px 25px rgba(212, 168, 67, 0.1);
+}
+
+/* =========================================
+   HEADING
+========================================= */
+
+.confirmation-eyebrow {
+  color: var(--accent-gold);
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.confirmation-container h1 {
+  max-width: 560px;
+
+  margin: 8px 0 10px;
+
+  color: var(--primary-dark);
+
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+
+  font-size: clamp(38px, 5vw, 54px);
+  font-weight: 600;
+  line-height: 1.08;
+}
+
+.confirmation-intro {
+  max-width: 450px;
+
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* =========================================
+   ORDER NUMBER
+========================================= */
+
+.confirmation-order-number {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin: 24px 0 27px;
+  padding: 11px 22px;
+
+  border: 1px solid #e5dccf;
+  border-radius: 999px;
+
+  background: #ffffff;
+}
+
+.confirmation-order-number span {
+  color: #9a9185;
+
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.confirmation-order-number strong {
+  margin-top: 2px;
+
+  color: var(--primary-dark);
+
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+/* =========================================
+   SUMMARY CARD
+========================================= */
+
+.confirmation-card {
+  width: 100%;
+
+  padding: 24px 25px;
+
+  border: 1px solid #e7ded2;
+  border-radius: 15px;
+
+  background: #ffffff;
+
+  text-align: left;
+
+  box-shadow:
+    0 12px 35px rgba(35, 25, 10, 0.06);
+}
+
+.confirmation-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding-bottom: 17px;
+
+  border-bottom: 1px solid #eee7dc;
+
+  color: var(--primary-dark);
+}
+
+.confirmation-card-heading > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.confirmation-card-heading span {
+  color: var(--accent-gold);
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.confirmation-card-heading h2 {
+  margin: 5px 0 0;
+
+  color: var(--primary-dark);
+
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.confirmation-card-heading svg {
+  color: var(--accent-gold);
+}
+
+/* =========================================
+   ITEMS
+========================================= */
+
+.confirmation-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.confirmation-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 17px 0;
+
+  border-bottom: 1px solid #eee7dc;
+}
+
+.confirmation-item > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.confirmation-item > div > strong {
+  color: var(--primary-dark);
+
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.confirmation-item span {
+  margin-top: 4px;
+
+  color: #80786d;
+
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.confirmation-item small {
+  margin-top: 3px;
+
+  color: #a0988c;
+
+  font-size: 7px;
+}
+
+.confirmation-item > strong {
+  flex: 0 0 auto;
+
+  color: var(--primary-green);
+
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+
+  font-size: 17px;
+}
+
+.confirmation-no-items {
+  padding: 20px 0;
+
+  color: #8e867b;
+
+  font-size: 9px;
+}
+
+/* =========================================
+   TOTAL
+========================================= */
+
+.confirmation-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-top: 18px;
+}
+
+.confirmation-total span {
+  color: var(--primary-dark);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.confirmation-total strong {
+  color: var(--primary-green);
+
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+
+  font-size: 26px;
+}
+
+/* =========================================
+   ACTION
+========================================= */
+
+.confirmation-actions {
+  margin-top: 25px;
+}
+
+.confirmation-home-button {
+  min-height: 48px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 0 23px;
+
+  border-radius: 999px;
+
+  background: var(--primary-dark);
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  box-shadow:
+    0 9px 22px rgba(26, 46, 26, 0.15);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.confirmation-home-button:hover {
+  background: var(--primary-green);
+  transform: translateY(-2px);
+}
+
+.confirmation-footer-text {
+  margin: 17px 0 0;
+
+  color: #a0978a;
+
+  font-family:
+    var(--font-script),
+    "Dancing Script",
+    cursive;
+
+  font-size: 16px;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .confirmation-page {
+    padding: 40px 0 60px;
+  }
+
+  .confirmation-container {
+    width: calc(100% - 28px);
+  }
+
+  .confirmation-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .confirmation-container h1 {
+    font-size: 38px;
+  }
+
+  .confirmation-intro {
+    font-size: 10px;
+  }
+
+  .confirmation-card {
+    padding: 20px 17px;
+  }
+
+  .confirmation-card-heading h2 {
+    font-size: 21px;
+  }
+}
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 380px) {
+  .confirmation-container {
+    width: calc(100% - 20px);
+  }
+
+  .confirmation-container h1 {
+    font-size: 33px;
+  }
+
+  .confirmation-card {
+    padding: 18px 14px;
+  }
+
+  .confirmation-item > div > strong {
+    font-size: 14px;
+  }
+
+  .confirmation-total strong {
+    font-size: 23px;
+  }
+}
+
+.confirmation-confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  display: block;
+  border-radius: 2px;
+  transform-origin: center;
+  background: var(--accent-gold);
+}
+
+.confetti-piece:nth-child(3n) {
+  background: var(--primary-green);
+}
+
+.confetti-piece:nth-child(4n) {
+  background: #ffffff;
+}
+
+.confetti-piece:nth-child(5n) {
+  background: #c99b38;
+}
+
+.confetti-piece:nth-child(7n) {
+  border-radius: 50%;
+}

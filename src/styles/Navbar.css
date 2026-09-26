@@ -1,0 +1,684 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  max-width: 100%;
+
+  z-index: 1000;
+
+  color: #ffffff;
+
+  background: rgba(20, 35, 20, 0.97);
+
+  border-bottom: 1px solid rgba(212, 168, 67, 0.12);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.16),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  overflow: visible;
+
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.navbar-scrolled {
+  background: rgba(16, 29, 17, 0.985);
+
+  border-bottom-color: rgba(212, 168, 67, 0.2);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.24),
+    0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================
+   NAV INNER
+========================================= */
+
+.nav-inner {
+  position: relative;
+
+  width: min(1240px, calc(100% - 60px));
+  max-width: 100%;
+
+  min-height: 78px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 25px;
+}
+
+/* =========================================
+   BRAND
+========================================= */
+
+.brand {
+  flex: 0 0 auto;
+
+  min-width: 245px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+  color: #ffffff;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  white-space: nowrap;
+}
+
+/* =========================================
+   CHEF HAT + IFY'S
+========================================= */
+
+.brand-name-wrap {
+  min-width: 66px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1;
+}
+
+.brand-chef {
+  margin-bottom: -1px;
+
+  color: #d4a843;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.brand-script {
+  color: #d4a843;
+
+  font:
+    700 30px / 0.9
+    var(--font-script);
+
+  white-space: nowrap;
+
+  transition: color 0.25s ease;
+}
+
+.brand:hover .brand-chef {
+  color: #f0d98c;
+
+  transform: translateY(-2px);
+}
+
+.brand:hover .brand-script {
+  color: #f0d98c;
+}
+
+/* =========================================
+   SIGNATURE FRIED RICE
+========================================= */
+
+.brand-title {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 4px 8px 10px 0;
+
+  font-family: var(--font-heading);
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+
+  line-height: 1.35;
+
+  text-align: left;
+}
+
+/* Curved gold underline */
+.brand-title::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 10px;
+
+  border-top: 2px solid #d4a843;
+
+  border-radius: 50% 50% 0 0;
+
+  transform: translateY(2px);
+
+  pointer-events: none;
+}
+
+.brand-title-signature {
+  color: #ffffff;
+}
+
+.brand-title-rice {
+  color: #d4a843;
+}
+
+/* =========================================
+   DESKTOP NAVIGATION
+========================================= */
+
+.desktop-nav {
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 2px;
+}
+
+.nav-link {
+  position: relative;
+
+  min-height: 78px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 9px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.82);
+
+  font-family: var(--font-body);
+
+  font-size: 11px;
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.nav-link:hover {
+  color: #d4a843;
+
+  transform: translateY(-1px);
+}
+
+.nav-link.active {
+  color: #d4a843;
+}
+
+.nav-link.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 9px;
+  right: 9px;
+  bottom: 18px;
+
+  height: 2px;
+
+  border-radius: 2px;
+
+  background: #d4a843;
+
+  box-shadow:
+    0 0 8px rgba(212, 168, 67, 0.22);
+}
+
+/* =========================================
+   ORDER BUTTON
+========================================= */
+
+.nav-order {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-height: 42px;
+
+  padding: 0 18px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #d4a843;
+
+  color: #1a2e1a;
+
+  font-family: var(--font-body);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 7px 20px rgba(0, 0, 0, 0.18),
+    0 3px 10px rgba(212, 168, 67, 0.08);
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.nav-order:hover {
+  background: #f0d98c;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.23),
+    0 4px 12px rgba(212, 168, 67, 0.14);
+}
+
+/* =========================================
+   MOBILE MENU BUTTON
+========================================= */
+
+.menu-toggle {
+  display: none;
+
+  width: 44px;
+  height: 44px;
+
+  margin-left: auto;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(212, 168, 67, 0.25);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #ffffff;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.menu-toggle:hover,
+.menu-toggle-open {
+  background: rgba(212, 168, 67, 0.1);
+
+  border-color: rgba(212, 168, 67, 0.5);
+
+  color: #d4a843;
+}
+
+/* =========================================
+   MOBILE NAVIGATION
+========================================= */
+
+.mobile-nav-wrapper {
+  width: 100%;
+
+  overflow: hidden;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-nav {
+  width: 100%;
+
+  max-height: calc(100vh - 78px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 8px 0 18px;
+
+  background: rgba(16, 29, 17, 0.99);
+
+  scrollbar-width: thin;
+}
+
+.mobile-nav-link {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 25px;
+
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.88);
+
+  font-family: var(--font-body);
+
+  font-size: 13px;
+  font-weight: 500;
+
+  text-align: left;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    padding-left 0.2s ease;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
+  color: #d4a843;
+
+  background: rgba(212, 168, 67, 0.045);
+
+  padding-left: 29px;
+}
+
+.mobile-active-dot {
+  width: 6px;
+  height: 6px;
+
+  flex: 0 0 6px;
+
+  border-radius: 50%;
+
+  background: #d4a843;
+}
+
+/* =========================================
+   MOBILE ORDER
+========================================= */
+
+.mobile-order {
+  width: calc(100% - 40px);
+
+  min-height: 50px;
+
+  margin: 17px 20px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #d4a843;
+
+  color: #1a2e1a;
+
+  font-family: var(--font-body);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.18);
+
+  transition:
+    background 0.25s ease,
+    transform 0.2s ease;
+}
+
+.mobile-order:hover {
+  background: #f0d98c;
+}
+
+.mobile-order-arrow {
+  margin-left: 2px;
+}
+
+/* =========================================
+   NAVBAR SPACER
+========================================= */
+
+.navbar-spacer {
+  width: 100%;
+  height: 78px;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+  .nav-inner {
+    width: calc(100% - 40px);
+
+    gap: 15px;
+  }
+
+  .brand {
+    min-width: 220px;
+  }
+
+  .brand-logo {
+    gap: 10px;
+  }
+
+  .brand-script {
+    font-size: 28px;
+  }
+
+  .brand-title {
+    font-size: 8px;
+  }
+
+  .desktop-nav {
+    gap: 0;
+  }
+
+  .nav-link {
+    padding-left: 7px;
+    padding-right: 7px;
+
+    font-size: 10px;
+  }
+
+  .nav-link.active::after {
+    left: 7px;
+    right: 7px;
+  }
+
+  .nav-order {
+    padding: 0 15px;
+  }
+}
+
+/* =========================================
+   MOBILE / TABLET NAV
+========================================= */
+
+@media (max-width: 900px) {
+  .nav-inner {
+    width: calc(100% - 40px);
+
+    min-height: 74px;
+  }
+
+  .desktop-nav,
+  .nav-order {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .navbar-spacer {
+    height: 74px;
+  }
+}
+
+/* =========================================
+   MOBILE BRAND
+========================================= */
+
+@media (max-width: 600px) {
+  .brand {
+    min-width: 0;
+  }
+
+  .brand-logo {
+    gap: 9px;
+  }
+
+  .brand-name-wrap {
+    min-width: 60px;
+  }
+
+  .brand-chef {
+    width: 17px;
+    height: 17px;
+  }
+
+  .brand-script {
+    font-size: 26px;
+  }
+
+  .brand-title {
+    font-size: 7px;
+
+    letter-spacing: 0.14em;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+  .nav-inner {
+    width: calc(100% - 28px);
+
+    min-height: 70px;
+  }
+
+  .brand-logo {
+    gap: 7px;
+  }
+
+  .brand-name-wrap {
+    min-width: 56px;
+  }
+
+  .brand-chef {
+    width: 16px;
+    height: 16px;
+  }
+
+  .brand-script {
+    font-size: 24px;
+  }
+
+  .brand-title {
+    font-size: 6.5px;
+
+    letter-spacing: 0.12em;
+
+    padding-right: 5px;
+  }
+
+  .brand-title::after {
+    height: 6px;
+    border-bottom-width: 1.5px;
+  }
+
+  .menu-toggle {
+    width: 42px;
+    height: 42px;
+  }
+
+  .mobile-nav {
+    max-height: calc(100vh - 70px);
+  }
+
+  .navbar-spacer {
+    height: 70px;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 360px) {
+  .nav-inner {
+    width: calc(100% - 22px);
+  }
+
+  .brand-logo {
+    gap: 5px;
+  }
+
+  .brand-name-wrap {
+    min-width: 51px;
+  }
+
+  .brand-script {
+    font-size: 22px;
+  }
+
+  .brand-chef {
+    width: 15px;
+    height: 15px;
+  }
+
+  .brand-title {
+    font-size: 5.5px;
+
+    letter-spacing: 0.1em;
+
+    padding-right: 4px;
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "ifys-signature-fried-rice",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"node server/server.js\"",
+    "server": "node server/server.js",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.3",
+    "express": "^5.2.1",
+    "framer-motion": "^11.11.17",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "resend": "^6.28.1",
+    "stripe": "^22.6.2",
+    "vite": "^5.4.10"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

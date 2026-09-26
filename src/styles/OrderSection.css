@@ -1,0 +1,1231 @@
+/* =========================================
+   ORDER SECTION
+========================================= */
+
+.order-section {
+  position: relative;
+  width: 100%;
+  padding: 100px 0 115px;
+  background: #faf6ee;
+  overflow: hidden;
+}
+
+.order-container {
+  width: min(1220px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* =========================================
+   SECTION HEADING
+========================================= */
+
+.order-heading {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 0 55px;
+}
+
+.order-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent-gold);
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.order-heading h2 {
+  margin: 9px 0 13px;
+  color: var(--primary-dark);
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+  font-size: clamp(34px, 4.5vw, 50px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.order-heading p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--text-muted);
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* =========================================
+   MAIN ORDER LAYOUT
+========================================= */
+
+.order-layout {
+  width: 100%;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.6fr)
+    minmax(330px, 0.78fr);
+  gap: 38px;
+  align-items: start;
+}
+
+/* =========================================
+   PAN AREA
+========================================= */
+
+.pan-area {
+  min-width: 0;
+}
+
+.pan-area-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.pan-area-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.step-number {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(212, 168, 67, 0.45);
+  border-radius: 50%;
+  color: var(--accent-gold);
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.pan-area-heading h3 {
+  margin: 0;
+  color: var(--primary-dark);
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.pan-area-heading p {
+  margin: 3px 0 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.required-label {
+  color: #8b806f;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   PAN GRID
+========================================= */
+
+.pan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 17px;
+}
+
+/* =========================================
+   PAN CARD
+========================================= */
+
+.pan-card {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  box-shadow:
+    0 10px 30px rgba(35, 25, 10, 0.07),
+    0 2px 6px rgba(35, 25, 10, 0.04);
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.pan-card:hover {
+  box-shadow:
+    0 18px 38px rgba(35, 25, 10, 0.11),
+    0 3px 8px rgba(35, 25, 10, 0.05);
+}
+
+.pan-card.selected {
+  border-color: var(--accent-gold);
+  box-shadow:
+    0 17px 38px rgba(35, 25, 10, 0.11),
+    0 0 0 2px rgba(212, 168, 67, 0.12);
+}
+
+/* =========================================
+   POPULAR BADGE
+========================================= */
+
+.popular-badge {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  z-index: 8;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: var(--accent-gold);
+  color: var(--primary-dark);
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+/* =========================================
+   PAN IMAGE
+========================================= */
+
+.pan-image-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 205px;
+  background:
+    radial-gradient(
+      circle at center,
+      #f3eee5 0%,
+      #e9e0d2 70%,
+      #ded3c2 100%
+    );
+  overflow: hidden;
+}
+
+.pan-image-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 205px;
+  aspect-ratio: 1 / 0.92;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.pan-card:hover .pan-image-wrap img {
+  transform: scale(1.035);
+}
+
+/* =========================================
+   SELECTED CHECK
+========================================= */
+
+.selected-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-gold);
+  color: var(--primary-dark);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+/* =========================================
+   PAN DETAILS
+========================================= */
+
+.pan-details {
+  padding: 18px 17px 17px;
+  background: var(--primary-green);
+  color: #ffffff;
+}
+
+.pan-topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pan-label {
+  display: block;
+  max-width: 150px;
+  color: #ffffff;
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.pan-topline strong {
+  flex: 0 0 auto;
+  color: var(--accent-gold);
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pan-serves {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+}
+
+.pan-details p {
+  min-height: 42px;
+  margin: 10px 0 15px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+/* =========================================
+   PAN SELECT BUTTON
+========================================= */
+
+.pan-select-button {
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid rgba(212, 168, 67, 0.8);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent-gold);
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.pan-select-button:hover {
+  background: var(--accent-gold);
+  color: var(--primary-dark);
+  border-color: var(--accent-gold);
+}
+
+.pan-select-button.selected-button {
+  background: var(--accent-gold);
+  color: var(--primary-dark);
+  border-color: var(--accent-gold);
+}
+
+/* =========================================
+   ORDER NOTE
+========================================= */
+
+.order-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 17px;
+  padding: 13px 15px;
+  border: 1px solid rgba(212, 168, 67, 0.2);
+  border-radius: 9px;
+  background: rgba(212, 168, 67, 0.06);
+  color: var(--text-muted);
+}
+
+.order-note svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--accent-gold);
+}
+
+.order-note p {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.order-note strong {
+  color: var(--primary-dark);
+}
+
+/* =========================================
+   CUSTOMIZATION CARD
+========================================= */
+
+.custom-card {
+  position: sticky;
+  top: 100px;
+  padding: 27px;
+  background: #ffffff;
+  border: 1px solid #eee7db;
+  border-radius: 15px;
+  box-shadow:
+    0 16px 40px rgba(35, 25, 10, 0.08),
+    0 3px 10px rgba(35, 25, 10, 0.04);
+}
+
+.custom-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.custom-eyebrow {
+  display: block;
+  color: var(--accent-gold);
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.custom-card h3 {
+  max-width: 250px;
+  margin: 6px 0 0;
+  color: var(--primary-dark);
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.12;
+}
+
+.step-badge {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary-dark);
+  color: var(--accent-gold);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* =========================================
+   FIELDSETS
+========================================= */
+
+.custom-card fieldset {
+  min-width: 0;
+  padding: 0;
+  margin: 0 0 23px;
+  border: 0;
+}
+
+.custom-card legend {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.custom-card legend small {
+  color: #9a9185;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   PROTEIN OPTIONS
+   MULTI-SELECT CHECKBOXES
+========================================= */
+
+.protein-options {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.protein-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 47px;
+  padding: 7px 10px;
+  border: 1px solid #e9e3d9;
+  border-radius: 9px;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.protein-option:hover {
+  border-color: rgba(212, 168, 67, 0.55);
+  background: #fffdf9;
+}
+
+.protein-option.checked {
+  border-color: rgba(212, 168, 67, 0.8);
+  background: rgba(212, 168, 67, 0.07);
+}
+
+.protein-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =========================================
+   CUSTOM CHECKBOX
+========================================= */
+
+.custom-checkbox {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #c8c0b5;
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--primary-dark);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.protein-option.checked .custom-checkbox {
+  border-color: var(--accent-gold);
+  background: var(--accent-gold);
+}
+
+.protein-option:active .custom-checkbox {
+  transform: scale(0.92);
+}
+
+/* =========================================
+   PROTEIN TEXT
+========================================= */
+
+.protein-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.protein-copy strong {
+  color: #302d28;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.protein-copy small {
+  color: #918a80;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+/* =========================================
+   SPICE
+========================================= */
+
+.spice-fieldset {
+  margin-bottom: 24px !important;
+}
+
+.spice-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.spice-option {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  padding: 8px 5px;
+  border: 1px solid #e5ded3;
+  border-radius: 9px;
+  background: #ffffff;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.spice-option:hover {
+  border-color: rgba(212, 168, 67, 0.55);
+}
+
+.spice-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.spice-option.checked {
+  border-color: var(--accent-gold);
+  background: rgba(212, 168, 67, 0.1);
+}
+
+.spice-name {
+  color: var(--primary-dark);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.spice-option small {
+  margin-top: 3px;
+  color: #948b7e;
+  font-size: 7px;
+}
+
+/* =========================================
+   QUANTITY
+========================================= */
+
+.quantity-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px 0;
+  border-top: 1px solid #eee8df;
+  border-bottom: 1px solid #eee8df;
+}
+
+.quantity-title {
+  display: block;
+  color: var(--primary-dark);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.quantity-section small {
+  display: block;
+  margin-top: 3px;
+  color: #968e83;
+  font-size: 8px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  height: 35px;
+  border: 1px solid #ddd5ca;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.quantity-control button {
+  width: 34px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: var(--primary-dark);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.quantity-control button:hover:not(:disabled) {
+  background: rgba(212, 168, 67, 0.12);
+  color: var(--accent-gold);
+}
+
+.quantity-control button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.quantity-control span {
+  min-width: 27px;
+  color: var(--primary-dark);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* =========================================
+   ORDER PREVIEW
+========================================= */
+
+.order-preview {
+  margin-top: 19px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #f8f4ec;
+}
+
+.preview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e8e0d5;
+  color: var(--primary-dark);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.preview-count {
+  color: #958c80;
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.preview-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e8e0d5;
+}
+
+.preview-item:last-of-type {
+  border-bottom: 0;
+}
+
+.preview-item div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.preview-item strong {
+  color: #3b372f;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.preview-item span {
+  color: #958c80;
+  font-size: 8px;
+  line-height: 1.45;
+}
+
+.preview-item > strong {
+  color: var(--primary-dark);
+  white-space: nowrap;
+}
+
+.preview-item > span {
+  white-space: nowrap;
+}
+
+.preview-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 12px;
+}
+
+.preview-total span {
+  color: var(--primary-dark);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.preview-total strong {
+  color: var(--primary-green);
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+/* =========================================
+   ADD TO CART
+========================================= */
+
+.add-cart {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 17px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--primary-dark);
+  color: #ffffff;
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow:
+    0 8px 18px rgba(26, 46, 26, 0.15);
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.add-cart:hover {
+  background: var(--primary-green);
+  box-shadow:
+    0 11px 24px rgba(26, 46, 26, 0.2);
+}
+
+.add-cart strong {
+  margin-left: auto;
+  color: var(--accent-gold);
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+  font-size: 16px;
+}
+
+.add-cart.added {
+  background: var(--accent-gold);
+  color: var(--primary-dark);
+  box-shadow:
+    0 8px 18px rgba(212, 168, 67, 0.2);
+}
+
+.order-summary {
+  margin: 9px 0 0;
+  color: #989083;
+  font-size: 8px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1080px) {
+  .order-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .custom-card {
+    position: relative;
+    top: auto;
+    max-width: 620px;
+  }
+
+  .pan-grid {
+    gap: 14px;
+  }
+}
+
+/* =========================================
+   TABLET / SMALL LAPTOP
+========================================= */
+
+@media (max-width: 800px) {
+  .order-section {
+    padding: 80px 0 90px;
+  }
+
+  .order-heading {
+    margin-bottom: 42px;
+  }
+
+  .pan-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pan-image-wrap,
+  .pan-image-wrap img {
+    min-height: 170px;
+  }
+
+  .pan-details {
+    padding: 15px;
+  }
+
+  .pan-label {
+    font-size: 14px;
+  }
+
+  .pan-topline strong {
+    font-size: 21px;
+  }
+
+  .pan-details p {
+    font-size: 9px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+  .order-container {
+    width: calc(100% - 28px);
+  }
+
+  .order-heading h2 {
+    font-size: 34px;
+  }
+
+  .order-heading p {
+    font-size: 13px;
+  }
+
+  .pan-area-heading {
+    align-items: flex-start;
+  }
+
+  .pan-area-heading > div {
+    align-items: flex-start;
+  }
+
+  .pan-area-heading h3 {
+    font-size: 20px;
+  }
+
+  .pan-grid {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .pan-card {
+    display: grid;
+    grid-template-columns:
+      minmax(135px, 38%)
+      minmax(0, 62%);
+  }
+
+  .pan-image-wrap {
+    min-height: 100%;
+    height: 100%;
+  }
+
+  .pan-image-wrap img {
+    width: 100%;
+    min-height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  .pan-details {
+    min-width: 0;
+    padding: 17px 15px;
+  }
+
+  .pan-details p {
+    min-height: auto;
+    margin: 8px 0 12px;
+  }
+
+  .popular-badge {
+    top: 9px;
+    left: 9px;
+    font-size: 6px;
+  }
+
+  .selected-check {
+    top: 9px;
+    right: 9px;
+  }
+
+  .custom-card {
+    width: 100%;
+    padding: 22px 19px;
+  }
+}
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 480px) {
+  .order-section {
+    padding: 70px 0 80px;
+  }
+
+  .order-container {
+    width: calc(100% - 24px);
+  }
+
+  .order-heading {
+    margin-bottom: 35px;
+  }
+
+  .order-eyebrow {
+    font-size: 9px;
+  }
+
+  .order-heading h2 {
+    margin-top: 8px;
+    font-size: 31px;
+  }
+
+  .order-heading p {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .pan-area-heading {
+    margin-bottom: 17px;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
+
+  .pan-area-heading h3 {
+    font-size: 18px;
+  }
+
+  .pan-area-heading p {
+    font-size: 9px;
+  }
+
+  .required-label {
+    font-size: 7px;
+  }
+
+  .pan-card {
+    grid-template-columns: 36% 64%;
+  }
+
+  .pan-image-wrap {
+    min-height: 190px;
+  }
+
+  .pan-details {
+    padding: 15px 13px;
+  }
+
+  .pan-label {
+    font-size: 13px;
+  }
+
+  .pan-topline strong {
+    font-size: 19px;
+  }
+
+  .pan-serves {
+    font-size: 9px;
+  }
+
+  .pan-details p {
+    font-size: 8px;
+    line-height: 1.45;
+  }
+
+  .pan-select-button {
+    min-height: 34px;
+    font-size: 8px;
+  }
+
+  .order-note {
+    padding: 11px 12px;
+  }
+
+  .order-note p {
+    font-size: 9px;
+  }
+
+  .custom-card {
+    padding: 20px 15px;
+  }
+
+  .custom-card h3 {
+    font-size: 23px;
+  }
+
+  .step-badge {
+    width: 31px;
+    height: 31px;
+    flex-basis: 31px;
+  }
+
+  .protein-option {
+    min-height: 45px;
+    padding: 6px 8px;
+  }
+
+  .custom-checkbox {
+    width: 17px;
+    height: 17px;
+    flex-basis: 17px;
+  }
+
+  .protein-copy strong {
+    font-size: 9px;
+  }
+
+  .protein-copy small {
+    font-size: 7px;
+  }
+
+  .spice-row {
+    gap: 5px;
+  }
+
+  .spice-option {
+    min-height: 55px;
+  }
+
+  .quantity-section {
+    padding: 13px 0;
+  }
+
+  .order-preview {
+    padding: 13px;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 370px) {
+  .order-container {
+    width: calc(100% - 18px);
+  }
+
+  .pan-card {
+    grid-template-columns: 34% 66%;
+  }
+
+  .pan-details {
+    padding: 13px 11px;
+  }
+
+  .pan-label {
+    font-size: 12px;
+  }
+
+  .pan-topline strong {
+    font-size: 17px;
+  }
+
+  .pan-details p {
+    display: none;
+  }
+
+  .custom-card {
+    padding: 18px 12px;
+  }
+
+  .custom-card h3 {
+    font-size: 21px;
+  }
+
+  .protein-copy strong {
+    font-size: 8px;
+  }
+
+  .protein-copy small {
+    font-size: 6.5px;
+  }
+}
+
+.protein-option {
+  position: relative;
+}
+
+.protein-price {
+  margin-left: auto;
+  padding-left: 12px;
+  color: var(--accent-gold);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.protein-option.checked .protein-price {
+  color: var(--primary-green);
+}
+
+@media (max-width: 520px) {
+  .protein-price {
+    font-size: 12px;
+  }
+}

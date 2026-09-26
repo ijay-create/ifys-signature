@@ -1,0 +1,636 @@
+.hero {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 700px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+  background-color: #1a2e1a;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(26, 46, 26, 0.58),
+      rgba(26, 46, 26, 0.24)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(26, 46, 26, 0.18),
+      rgba(26, 46, 26, 0.34)
+    );
+}
+
+/* =========================================
+   HERO CONTAINER
+========================================= */
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  width: min(1280px, calc(100% - 100px));
+  max-width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  align-items: center;
+  gap: clamp(45px, 6vw, 90px);
+  padding: 85px 0;
+}
+
+/* =========================================
+   LEFT CONTENT
+========================================= */
+
+.hero-copy {
+  width: 100%;
+  max-width: 570px;
+  min-width: 0;
+}
+
+/* =========================================
+   BRAND
+========================================= */
+
+.hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.hero-brand-name {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  color: #d4a843;
+  white-space: nowrap;
+  padding-top: 16px;
+}
+
+.hero-chef-icon {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 27px;
+  height: 27px;
+  color: #d4a843;
+  transform: translateX(-50%) rotate(-8deg);
+}
+
+.hero-brand-name span {
+  display: block;
+  font-family:
+    var(--font-script),
+    "Dancing Script",
+    cursive;
+  font-size: clamp(76px, 7vw, 94px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #d4a843;
+}
+
+/* =========================================
+   BRAND TITLE
+========================================= */
+
+.hero-brand-title {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-top: 5px;
+  padding-bottom: 19px;
+  min-width: 215px;
+}
+
+/*
+   Bold upward-curved gold line underneath
+   the entire SIGNATURE / FRIED RICE title.
+*/
+
+.hero-brand-title::after {
+  content: "";
+  position: absolute;
+  left: -3%;
+  bottom: 0;
+  width: 106%;
+  height: 13px;
+  border-top: 4px solid #d4a843;
+  border-radius: 50% 50% 0 0;
+  transform: translateY(1px);
+  pointer-events: none;
+}
+
+.hero-brand-title strong {
+  display: block;
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+  font-size: clamp(22px, 2.2vw, 29px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.09em;
+}
+
+.hero-brand-signature {
+  color: #ffffff;
+}
+
+.hero-brand-rice {
+  color: #d4a843;
+}
+
+/* =========================================
+   TAGLINE
+========================================= */
+
+.hero-tagline {
+  margin-top: 28px;
+  color: #ffffff;
+  font-family:
+    var(--font-script),
+    "Dancing Script",
+    cursive;
+  font-size: clamp(26px, 2.6vw, 33px);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.hero-description {
+  max-width: 470px;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.88);
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 35px;
+}
+
+.hero-button {
+  min-height: 55px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 25px;
+  border-radius: 30px;
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* =========================================
+   PRIMARY BUTTON
+========================================= */
+
+.hero-button-primary {
+  background: #d4a843;
+  color: #1a2e1a;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.25),
+    0 4px 12px rgba(212, 168, 67, 0.2);
+}
+
+.hero-button-primary:hover {
+  background: #d4a843;
+  color: #1a2e1a;
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.3),
+    0 5px 16px rgba(212, 168, 67, 0.3);
+}
+
+/* =========================================
+   SECONDARY BUTTON
+========================================= */
+
+.hero-button-secondary {
+  border: 2px solid #d4a843;
+  background: rgba(26, 46, 26, 0.18);
+  color: #ffffff;
+}
+
+.hero-button-secondary:hover {
+  background: rgba(212, 168, 67, 0.12);
+  border-color: #d4a843;
+  color: #ffffff;
+}
+
+/* =========================================
+   RIGHT IMAGE
+========================================= */
+
+.hero-visual {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.hero-image-frame {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  margin-left: auto;
+  overflow: visible;
+}
+
+.hero-image-frame img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1.22 / 1;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.42),
+    0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================
+   IMAGE SHADE
+========================================= */
+
+.hero-image-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 15px;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(26, 46, 26, 0.06),
+      transparent 45%,
+      rgba(26, 46, 26, 0.12)
+    );
+}
+
+/* =========================================
+   IMAGE MESSAGE
+========================================= */
+
+.hero-image-message {
+  position: absolute;
+  z-index: 5;
+  top: 8%;
+  right: 5%;
+  max-width: 220px;
+  color: #ffffff;
+  font-family:
+    var(--font-script),
+    "Dancing Script",
+    cursive;
+  font-size: clamp(21px, 2.2vw, 27px);
+  font-weight: 600;
+  line-height: 1.05;
+  text-align: center;
+  transform: rotate(7deg);
+  text-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.7),
+    0 5px 18px rgba(0, 0, 0, 0.4);
+}
+
+.hero-image-message span {
+  display: block;
+  margin-top: 2px;
+  color: #d4a843;
+  font-size: 26px;
+}
+
+/* =========================================
+   GOLD IMAGE ACCENT
+========================================= */
+
+.hero-image-accent {
+  position: absolute;
+  z-index: 1;
+  right: -16px;
+  bottom: -16px;
+  width: 88%;
+  height: 90%;
+  border: 1px solid rgba(212, 168, 67, 0.55);
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1050px) {
+  .hero-inner {
+    width: min(calc(100% - 60px), 1100px);
+    grid-template-columns:
+      minmax(0, 0.95fr)
+      minmax(0, 1.05fr);
+    gap: 45px;
+  }
+
+  .hero-brand {
+    gap: 18px;
+  }
+
+  .hero-brand-title {
+    min-width: 190px;
+  }
+
+  .hero-brand-title strong {
+    font-size: 21px;
+  }
+
+  .hero-brand-name span {
+    font-size: 75px;
+  }
+
+  .hero-button {
+    padding: 0 20px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    background-position: center;
+  }
+
+  .hero-overlay {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(26, 46, 26, 0.55),
+        rgba(26, 46, 26, 0.35)
+      );
+  }
+
+  .hero-inner {
+    width: calc(100% - 40px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 50px;
+    padding: 70px 0 80px;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+  }
+
+  .hero-brand {
+    gap: 15px;
+    max-width: 100%;
+  }
+
+  .hero-brand-name {
+    padding-top: 13px;
+  }
+
+  .hero-brand-name span {
+    font-size: 64px;
+  }
+
+  .hero-chef-icon {
+    top: -4px;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+  }
+
+  .hero-brand-title {
+    min-width: 0;
+    padding-bottom: 13px;
+  }
+
+  .hero-brand-title::after {
+    left: -3%;
+    width: 106%;
+    height: 10px;
+    border-top-width: 3px;
+  }
+
+  .hero-brand-title strong {
+    font-size: 19px;
+    letter-spacing: 0.07em;
+  }
+
+  .hero-tagline {
+    margin-top: 25px;
+    font-size: 28px;
+  }
+
+  .hero-description {
+    max-width: 600px;
+    font-size: 14px;
+  }
+
+  .hero-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .hero-button {
+    width: 100%;
+    min-height: 55px;
+  }
+
+  .hero-visual {
+    width: 100%;
+  }
+
+  .hero-image-frame {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero-image-frame img {
+    aspect-ratio: 1.15 / 1;
+    border-radius: 13px;
+  }
+
+  .hero-image-message {
+    top: 7%;
+    right: 4%;
+    max-width: 170px;
+    font-size: 21px;
+  }
+
+  .hero-image-accent {
+    right: -8px;
+    bottom: -8px;
+    width: 90%;
+    height: 90%;
+    border-radius: 13px;
+  }
+}
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 520px) {
+  .hero-inner {
+    width: calc(100% - 28px);
+    gap: 42px;
+    padding: 55px 0 65px;
+  }
+
+  .hero-brand {
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-brand-name {
+    padding-top: 11px;
+  }
+
+  .hero-brand-name span {
+    font-size: 57px;
+  }
+
+  .hero-chef-icon {
+    top: -4px;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+  }
+
+  .hero-brand-title {
+    padding-bottom: 11px;
+  }
+
+  .hero-brand-title::after {
+    left: -3%;
+    width: 106%;
+    height: 8px;
+    border-top-width: 3px;
+  }
+
+  .hero-brand-title strong {
+    font-size: 15px;
+    letter-spacing: 0.065em;
+  }
+
+  .hero-tagline {
+    font-size: 25px;
+  }
+
+  .hero-description {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .hero-image-message {
+    top: 6%;
+    right: 4%;
+    max-width: 145px;
+    font-size: 18px;
+  }
+
+  .hero-image-message span {
+    font-size: 22px;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 380px) {
+  .hero-inner {
+    width: calc(100% - 22px);
+  }
+
+  .hero-brand {
+    gap: 9px;
+  }
+
+  .hero-brand-name {
+    padding-top: 10px;
+  }
+
+  .hero-brand-name span {
+    font-size: 50px;
+  }
+
+  .hero-chef-icon {
+    top: -3px;
+    left: 50%;
+    width: 17px;
+    height: 17px;
+  }
+
+  .hero-brand-title strong {
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-brand-title::after {
+    left: -3%;
+    width: 106%;
+    height: 7px;
+    border-top-width: 3px;
+  }
+
+  .hero-tagline {
+    font-size: 23px;
+  }
+
+  .hero-image-message {
+    max-width: 120px;
+    font-size: 16px;
+  }
+
+  .hero-image-accent {
+    right: -5px;
+    bottom: -5px;
+  }
+}

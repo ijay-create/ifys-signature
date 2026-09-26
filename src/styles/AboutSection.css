@@ -1,0 +1,920 @@
+/* =========================================
+   ABOUT SECTION
+========================================= */
+
+.about-section {
+  position: relative;
+
+  width: 100%;
+
+  padding: 105px 0 115px;
+
+  background: var(--bg-cream);
+
+  overflow: hidden;
+}
+
+/* =========================================
+   BACKGROUND DECORATION
+========================================= */
+
+.about-background-circle {
+  position: absolute;
+
+  border: 1px solid rgba(212, 168, 67, 0.12);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.about-circle-one {
+  width: 420px;
+  height: 420px;
+
+  top: -270px;
+  left: -210px;
+}
+
+.about-circle-two {
+  width: 520px;
+  height: 520px;
+
+  right: -320px;
+  bottom: -350px;
+}
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.about-container {
+  position: relative;
+
+  z-index: 2;
+
+  width: min(1180px, calc(100% - 40px));
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.2fr)
+    minmax(260px, 0.72fr)
+    minmax(250px, 0.82fr);
+
+  gap: 50px;
+
+  align-items: center;
+}
+
+/* =========================================
+   ABOUT COPY
+========================================= */
+
+.about-copy {
+  min-width: 0;
+}
+
+.section-label {
+  display: inline-block;
+
+  color: var(--primary-green);
+
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+}
+
+.about-copy h2 {
+  margin: 9px 0 8px;
+
+  color: var(--text-dark);
+
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+
+  font-size: clamp(36px, 4vw, 48px);
+
+  font-weight: 600;
+
+  line-height: 1.1;
+
+  letter-spacing: -0.025em;
+}
+
+.about-copy h2 span {
+  color: var(--primary-green);
+
+  font-style: italic;
+}
+
+.about-title-line {
+  width: 48px;
+  height: 2px;
+
+  margin-bottom: 19px;
+
+  background: var(--accent-gold);
+}
+
+.about-copy > p {
+  max-width: 570px;
+
+  margin: 0 0 13px;
+
+  color: var(--text-muted);
+
+  font-family:
+    var(--font-body),
+    "Poppins",
+    sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.85;
+}
+
+/* =========================================
+   ABOUT HIGHLIGHT
+========================================= */
+
+.about-highlight {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  max-width: 500px;
+
+  margin-top: 22px;
+
+  padding: 16px 19px;
+
+  border-left: 3px solid var(--accent-gold);
+
+  background: rgba(255, 255, 255, 0.55);
+
+  border-radius: 0 8px 8px 0;
+}
+
+.about-highlight-mark {
+  color: var(--accent-gold);
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 35px;
+
+  line-height: 0.7;
+}
+
+.about-highlight p {
+  margin: 0;
+
+  color: var(--primary-green);
+
+  font-family:
+    var(--font-script),
+    "Dancing Script",
+    cursive;
+
+  font-size: 21px;
+
+  font-weight: 600;
+
+  line-height: 1.15;
+}
+
+.about-highlight p span {
+  color: var(--accent-gold);
+}
+
+/* =========================================
+   MINI DETAILS
+========================================= */
+
+.about-mini-details {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0;
+
+  margin-top: 27px;
+}
+
+.about-mini-details > div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  padding: 0 20px;
+
+  border-right: 1px solid var(--border-light);
+}
+
+.about-mini-details > div:first-child {
+  padding-left: 0;
+}
+
+.about-mini-details > div:last-child {
+  border-right: none;
+}
+
+.about-mini-details strong {
+  color: var(--primary-green);
+
+  font-family:
+    var(--font-heading),
+    "Playfair Display",
+    Georgia,
+    serif;
+
+  font-size: 17px;
+
+  font-weight: 600;
+}
+
+.about-mini-details span {
+  color: var(--text-muted);
+
+  font-size: 8px;
+
+  font-weight: 500;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+}
+
+/* =========================================
+   ABOUT IMAGE
+========================================= */
+
+.about-image-wrap {
+  position: relative;
+
+  min-width: 0;
+
+  width: 100%;
+}
+
+.about-image-frame {
+  position: relative;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  box-shadow:
+    14px 16px 0 rgba(212, 168, 67, 0.2),
+    0 18px 40px rgba(35, 25, 10, 0.12);
+}
+
+.about-image-frame img {
+  display: block;
+
+  width: 100%;
+
+  aspect-ratio: 0.82;
+
+  object-fit: cover;
+
+  transition: transform 0.6s ease;
+}
+
+.about-image-wrap:hover .about-image-frame img {
+  transform: scale(1.025);
+}
+
+/* =========================================
+   IMAGE OVERLAY
+========================================= */
+
+.about-image-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+}
+
+/* =========================================
+   IMAGE CAPTION
+========================================= */
+
+.about-image-caption {
+  position: absolute;
+
+  z-index: 2;
+
+  left: 18px;
+  bottom: 17px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.about-image-caption span {
+  color: rgba(255, 255, 255, 0.72);
+
+  font-size: 8px;
+
+  font-weight: 500;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+.about-image-caption strong {
+  color: #ffffff;
+
+  font-family:
+    var(--font-script),
+    "Dancing Script",
+    cursive;
+
+  font-size: 22px;
+
+  font-weight: 600;
+}
+
+/* =========================================
+   IMAGE DECORATIONS
+========================================= */
+
+.about-image-decoration {
+  position: absolute;
+
+  z-index: -1;
+
+  border: 1px solid rgba(45, 74, 45, 0.2);
+
+  border-radius: 9px;
+
+  pointer-events: none;
+}
+
+.about-decoration-one {
+  width: 75px;
+  height: 75px;
+
+  top: -17px;
+  left: -17px;
+}
+
+.about-decoration-two {
+  width: 90px;
+  height: 90px;
+
+  right: -19px;
+  bottom: -18px;
+
+  border-color: rgba(212, 168, 67, 0.4);
+}
+
+/* =========================================
+   SPARKLES
+========================================= */
+
+.sparkle {
+  position: absolute;
+
+  z-index: 4;
+
+  color: var(--accent-gold);
+
+  pointer-events: none;
+}
+
+.sparkle-one {
+  top: -16px;
+  left: -19px;
+}
+
+.sparkle-two {
+  right: -19px;
+  bottom: 15px;
+}
+
+/* =========================================
+   CONTACT CARD
+========================================= */
+
+.contact-card {
+  min-width: 0;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 45px rgba(35, 25, 10, 0.1),
+    0 3px 10px rgba(35, 25, 10, 0.04);
+}
+
+.contact-bar {
+  width: 100%;
+  height: 7px;
+
+  background: var(--accent-gold);
+}
+
+.contact-content {
+  padding: 29px 27px 27px;
+}
+
+.contact-eyebrow {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: var(--accent-gold);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+}
+
+.contact-content h3 {
+  margin: 0;
+
+  color: var(--primary-green);
+
+  font-family:
+    var(--font-script),
+    "Dancing Script",
+    cursive;
+
+  font-size: 31px;
+
+  font-weight: 600;
+
+  line-height: 1.1;
+}
+
+.contact-intro {
+  margin: 13px 0 21px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  line-height: 1.7;
+}
+
+/* =========================================
+   CONTACT LIST
+========================================= */
+
+.contact-list {
+  display: grid;
+
+  gap: 12px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  color: inherit;
+
+  text-decoration: none;
+}
+
+.contact-item:hover .contact-icon {
+  background: var(--accent-gold);
+
+  color: var(--primary-dark);
+}
+
+.contact-icon {
+  width: 33px;
+  height: 33px;
+
+  flex: 0 0 33px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: rgba(212, 168, 67, 0.1);
+
+  color: var(--accent-gold);
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.contact-item-copy {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.contact-item-copy small {
+  color: #999;
+
+  font-size: 7px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.07em;
+
+  text-transform: uppercase;
+}
+
+.contact-item-copy strong {
+  overflow: hidden;
+
+  color: #555;
+
+  font-size: 10px;
+
+  font-weight: 500;
+
+  line-height: 1.35;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.contact-location {
+  cursor: default;
+}
+
+.contact-location:hover .contact-icon {
+  background: rgba(212, 168, 67, 0.1);
+
+  color: var(--accent-gold);
+}
+
+/* =========================================
+   CONTACT DIVIDER
+========================================= */
+
+.contact-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 22px 0 18px;
+
+  background: var(--border-light);
+}
+
+/* =========================================
+   SOCIAL SECTION
+========================================= */
+
+.social-section {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+.social-section > span {
+  color: #999;
+
+  font-size: 7px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+}
+
+.socials {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+.socials a {
+  width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--primary-green);
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.socials a:hover {
+  background: var(--accent-gold);
+
+  color: var(--primary-dark);
+
+  transform: translateY(-2px);
+}
+
+.tiktok-icon {
+  font-family: Arial, sans-serif;
+
+  font-size: 17px;
+
+  font-weight: 700;
+}
+
+/* =========================================
+   CONTACT FOOTER
+========================================= */
+
+.contact-footer-text {
+  margin: 15px 0 0;
+
+  color: var(--text-muted);
+
+  font-family:
+    var(--font-script),
+    "Dancing Script",
+    cursive;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  line-height: 1.2;
+}
+
+/* =========================================
+   LARGE TABLET
+========================================= */
+
+@media (max-width: 1050px) {
+  .about-container {
+    grid-template-columns:
+      minmax(0, 1.15fr)
+      minmax(230px, 0.7fr)
+      minmax(230px, 0.8fr);
+
+    gap: 32px;
+  }
+
+  .about-copy > p {
+    font-size: 12px;
+  }
+
+  .contact-content {
+    padding: 25px 22px;
+  }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .about-section {
+    padding: 90px 0 100px;
+  }
+
+  .about-container {
+    width: min(720px, calc(100% - 40px));
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(240px, 0.72fr);
+
+    gap: 42px 35px;
+  }
+
+  .about-copy {
+    grid-column: 1 / -1;
+  }
+
+  .about-copy > p {
+    max-width: 700px;
+  }
+
+  .about-image-wrap {
+    max-width: 360px;
+
+    justify-self: center;
+
+    width: 100%;
+  }
+
+  .contact-card {
+    align-self: center;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+  .about-section {
+    padding: 75px 0 85px;
+  }
+
+  .about-container {
+    width: calc(100% - 28px);
+
+    grid-template-columns: 1fr;
+
+    gap: 42px;
+  }
+
+  .about-copy {
+    grid-column: auto;
+  }
+
+  .about-copy h2 {
+    font-size: 38px;
+  }
+
+  .about-copy > p {
+    font-size: 11px;
+
+    line-height: 1.8;
+  }
+
+  .about-highlight {
+    margin-top: 20px;
+  }
+
+  .about-mini-details {
+    margin-top: 24px;
+  }
+
+  .about-image-wrap {
+    max-width: 430px;
+
+    justify-self: start;
+  }
+
+  .contact-card {
+    width: 100%;
+  }
+}
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 65px 0 75px;
+  }
+
+  .about-container {
+    width: calc(100% - 24px);
+
+    gap: 35px;
+  }
+
+  .about-copy h2 {
+    font-size: 34px;
+  }
+
+  .about-highlight {
+    padding: 14px 15px;
+  }
+
+  .about-highlight p {
+    font-size: 19px;
+  }
+
+  .about-mini-details {
+    justify-content: space-between;
+  }
+
+  .about-mini-details > div {
+    padding: 0 11px;
+  }
+
+  .about-mini-details > div:first-child {
+    padding-left: 0;
+  }
+
+  .about-mini-details strong {
+    font-size: 15px;
+  }
+
+  .about-mini-details span {
+    font-size: 7px;
+  }
+
+  .about-image-decoration {
+    display: none;
+  }
+
+  .sparkle-one {
+    left: -8px;
+  }
+
+  .sparkle-two {
+    right: -8px;
+  }
+
+  .contact-content {
+    padding: 25px 20px;
+  }
+
+  .contact-content h3 {
+    font-size: 29px;
+  }
+
+  .contact-item-copy strong {
+    font-size: 9px;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 370px) {
+  .about-container {
+    width: calc(100% - 18px);
+  }
+
+  .about-copy h2 {
+    font-size: 31px;
+  }
+
+  .about-copy > p {
+    font-size: 10px;
+  }
+
+  .about-highlight p {
+    font-size: 17px;
+  }
+
+  .about-mini-details > div {
+    padding: 0 8px;
+  }
+
+  .about-mini-details strong {
+    font-size: 14px;
+  }
+
+  .contact-content {
+    padding: 23px 17px;
+  }
+}
