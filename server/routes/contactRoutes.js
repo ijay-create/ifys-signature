@@ -1,481 +1,538 @@
 import express from "express";
-import { Resend } from "resend";
+import { sendQuoteRequestEmail } from "../utils/emailService.js";
 
 const router = express.Router();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const cleanString = (value) => {
+  if (value === null || value === undefined) {
+    return "";
+  }
 
-const FROM_EMAIL =
-  process.env.FROM_EMAIL ||
-  "Ify's Signature <onboarding@resend.dev>";
+  return String(value).trim();
+};
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const normalizeValue = (value) => {
+  return cleanString(value).toLowerCase();
+};
+
+const parsePanQuantity = (value) => {
+  const parsed = Number(value);
+
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return 0;
+  }
+
+  return Math.floor(parsed);
+};
+
+const normalizeSize = (value) => {
+  const normalized = normalizeValue(value);
+
+  if (normalized === "small") {
+    return "Small";
+  }
+
+  if (normalized === "medium") {
+    return "Medium";
+  }
+
+  if (normalized === "large") {
+    return "Large";
+  }
+
+  return "";
+};
+
+const normalizeServiceOption = (value) => {
+  const normalized = normalizeValue(value);
+
+  if (
+    normalized === "delivery" ||
+    normalized.includes("delivery")
+  ) {
+    return "delivery";
+  }
+
+  if (
+    normalized === "pickup" ||
+    normalized === "pick-up" ||
+    normalized === "pick up" ||
+    normalized.includes("pickup") ||
+    normalized.includes("pick-up")
+  ) {
+    return "pickup";
+  }
+
+  if (
+    normalized === "late" ||
+    normalized === "late order" ||
+    normalized.includes("late")
+  ) {
+    return "late";
+  }
+
+  return "";
+};
+
+const normalizeDeliveryPlatform = (value) => {
+  const normalized = normalizeValue(value);
+
+  if (normalized.includes("uber")) {
+    return "Uber Eats";
+  }
+
+  if (normalized.includes("door")) {
+    return "DoorDash";
+  }
+
+  return cleanString(value);
+};
 
 router.post("/quote", async (req, res) => {
   try {
+    console.log(
+      "========================================"
+    );
+
+    console.log(
+      "QUOTE ROUTE HIT"
+    );
+
+    console.log(
+      "QUOTE BODY:",
+      JSON.stringify(req.body, null, 2)
+    );
+
+    console.log(
+      "========================================"
+    );
+
     const {
       name,
       email,
       phone,
       eventType,
       eventDate,
-      guests,
       location,
+
+      smallPans,
+      mediumPans,
+      largePans,
+
+      chickenSize,
+      shrimpSize,
+      beefSize,
+      mixedSize,
+
+      spiceLevel,
+      allergy,
+      excludedIngredients,
+
+      serviceOption,
+      deliveryPlatform,
+
       message,
+
+      totalPans,
+      estimatedTotal,
     } = req.body;
 
+    /* =========================================
+       CUSTOMER DETAILS
+    ========================================= */
+
+    const cleanName = cleanString(name);
+    const cleanEmail = cleanString(email);
+    const cleanPhone = cleanString(phone);
+
+    const cleanEventType =
+      cleanString(eventType);
+
+    const cleanEventDate =
+      cleanString(eventDate);
+
+    const cleanLocation =
+      cleanString(location);
+
+    if (!cleanName) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please enter your full name.",
+      });
+    }
+
+    if (!cleanEmail) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please enter your email address.",
+      });
+    }
+
+    if (!cleanPhone) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please enter your phone number.",
+      });
+    }
+
+    if (!cleanEventType) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please select your event type.",
+      });
+    }
+
+    if (!cleanEventDate) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please select your event date.",
+      });
+    }
+
+    /* =========================================
+       PAN COUNTS
+    ========================================= */
+
+    const parsedSmallPans =
+      parsePanQuantity(smallPans);
+
+    const parsedMediumPans =
+      parsePanQuantity(mediumPans);
+
+    const parsedLargePans =
+      parsePanQuantity(largePans);
+
+    const calculatedTotalPans =
+      parsedSmallPans +
+      parsedMediumPans +
+      parsedLargePans;
+
+    if (calculatedTotalPans < 1) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please select at least one pan.",
+      });
+    }
+
+    /* =========================================
+       SPICE LEVEL
+    ========================================= */
+
+    const cleanSpiceLevel =
+      cleanString(spiceLevel);
+
+    if (!cleanSpiceLevel) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please select your preferred spice level.",
+      });
+    }
+
+    /* =========================================
+       SERVICE OPTION
+    ========================================= */
+
+    const normalizedServiceOption =
+      normalizeServiceOption(
+        serviceOption
+      );
+
+    if (!normalizedServiceOption) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please select a delivery or pickup option.",
+      });
+    }
+
+    /* =========================================
+       LOCATION
+    ========================================= */
+
+    if (!cleanLocation) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please enter your event or delivery location.",
+      });
+    }
+
+    /* =========================================
+       DELIVERY PLATFORM
+    ========================================= */
+
+    const normalizedDeliveryPlatform =
+      normalizeDeliveryPlatform(
+        deliveryPlatform
+      );
+
     if (
-      !name ||
-      !email ||
-      !phone ||
-      !eventType ||
-      !eventDate ||
-      !guests
+      normalizedServiceOption ===
+        "delivery" &&
+      !normalizedDeliveryPlatform
     ) {
       return res.status(400).json({
         success: false,
-        message: "Please complete all required fields.",
+        message:
+          "Please select Uber Eats or DoorDash for delivery.",
       });
     }
 
-    if (!ADMIN_EMAIL) {
-      console.error(
-        "ADMIN_EMAIL is missing from the server environment."
+    /* =========================================
+       PAN SELECTIONS
+    ========================================= */
+
+    const pans = [];
+
+    if (parsedSmallPans > 0) {
+      pans.push({
+        name: "Small Pan",
+        quantity: parsedSmallPans,
+        price: 45,
+      });
+    }
+
+    if (parsedMediumPans > 0) {
+      pans.push({
+        name: "Medium Pan",
+        quantity: parsedMediumPans,
+        price: 65,
+      });
+    }
+
+    if (parsedLargePans > 0) {
+      pans.push({
+        name: "Large Pan",
+        quantity: parsedLargePans,
+        price: 100,
+      });
+    }
+
+    /* =========================================
+       PROTEIN PRICES
+    ========================================= */
+
+    const proteinPrices = {
+      Chicken: {
+        Small: 8,
+        Medium: 14,
+        Large: 20,
+      },
+
+      Shrimp: {
+        Small: 12,
+        Medium: 20,
+        Large: 30,
+      },
+
+      Beef: {
+        Small: 10,
+        Medium: 17,
+        Large: 24,
+      },
+
+      Mixed: {
+        Small: 18,
+        Medium: 30,
+        Large: 42,
+      },
+    };
+
+    /* =========================================
+       PROTEIN SELECTIONS
+    ========================================= */
+
+    const proteinSelections = [];
+
+    const addProtein = (
+      proteinName,
+      selectedSize
+    ) => {
+      const normalizedSize =
+        normalizeSize(selectedSize);
+
+      if (!normalizedSize) {
+        return;
+      }
+
+      proteinSelections.push({
+        name: proteinName,
+        size: normalizedSize,
+        price:
+          proteinPrices[
+            proteinName
+          ]?.[normalizedSize] || 0,
+      });
+    };
+
+    addProtein(
+      "Chicken",
+      chickenSize
+    );
+
+    addProtein(
+      "Shrimp",
+      shrimpSize
+    );
+
+    addProtein(
+      "Beef",
+      beefSize
+    );
+
+    addProtein(
+      "Mixed",
+      mixedSize
+    );
+
+    /* =========================================
+       DELIVERY METHOD
+    ========================================= */
+
+    let deliveryMethod =
+      "Not specified";
+
+    if (
+      normalizedServiceOption ===
+      "delivery"
+    ) {
+      deliveryMethod =
+        normalizedDeliveryPlatform;
+    }
+
+    if (
+      normalizedServiceOption ===
+      "pickup"
+    ) {
+      deliveryMethod =
+        "Self Pick-Up";
+    }
+
+    if (
+      normalizedServiceOption ===
+      "late"
+    ) {
+      deliveryMethod =
+        "Late Order";
+    }
+
+    /* =========================================
+       LATE ORDER
+    ========================================= */
+
+    const lateOrder =
+      normalizedServiceOption ===
+      "late";
+
+    /* =========================================
+       OTHER DETAILS
+    ========================================= */
+
+    const cleanAllergy =
+      cleanString(allergy) ||
+      "None";
+
+    const cleanExcludedIngredients =
+      cleanString(
+        excludedIngredients
       );
 
-      return res.status(500).json({
-        success: false,
+    const cleanMessage =
+      cleanString(message);
+
+    /* =========================================
+       TOTALS
+    ========================================= */
+
+    const finalTotalPans =
+      calculatedTotalPans;
+
+    const parsedEstimatedTotal =
+      Number(estimatedTotal);
+
+    const finalEstimatedTotal =
+      Number.isFinite(
+        parsedEstimatedTotal
+      ) &&
+      parsedEstimatedTotal >= 0
+        ? parsedEstimatedTotal
+        : 0;
+
+    /* =========================================
+       SEND EMAIL
+    ========================================= */
+
+    const emailResult =
+      await sendQuoteRequestEmail({
+        name: cleanName,
+
+        email: cleanEmail,
+
+        phone: cleanPhone,
+
+        eventType:
+          cleanEventType,
+
+        eventDate:
+          cleanEventDate,
+
+        location:
+          cleanLocation,
+
+        pans,
+
+        proteinSelections,
+
+        spiceLevel:
+          cleanSpiceLevel,
+
+        allergy:
+          cleanAllergy,
+
+        excludedIngredients:
+          cleanExcludedIngredients,
+
+        serviceOption:
+          normalizedServiceOption,
+
+        deliveryPlatform:
+          normalizedDeliveryPlatform,
+
+        deliveryMethod,
+
+        lateOrder,
+
         message:
-          "The contact email service is not configured.",
+          cleanMessage,
+
+        totalPans:
+          finalTotalPans,
+
+        estimatedTotal:
+          finalEstimatedTotal,
       });
-    }
-
-    const formattedDate = new Date(
-      `${eventDate}T00:00:00`
-    ).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
-    const safeLocation =
-      location?.trim() || "Not provided";
-
-    const safeMessage =
-      message?.trim() || "No additional details provided.";
-
-    const { data, error } = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [ADMIN_EMAIL],
-      replyTo: email,
-      subject: `New Quote Request — ${name} — ${eventType}`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-            <title>New Quote Request</title>
-          </head>
-
-          <body
-            style="
-              margin: 0;
-              padding: 0;
-              background: #f5f0e8;
-              font-family: Arial, Helvetica, sans-serif;
-              color: #1a1a1a;
-            "
-          >
-            <div
-              style="
-                width: 100%;
-                padding: 40px 15px;
-                box-sizing: border-box;
-              "
-            >
-              <div
-                style="
-                  max-width: 650px;
-                  margin: 0 auto;
-                  background: #ffffff;
-                  border-radius: 18px;
-                  overflow: hidden;
-                  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
-                "
-              >
-
-                <!-- HEADER -->
-
-                <div
-                  style="
-                    background: #1a2e1a;
-                    padding: 35px 30px;
-                    text-align: center;
-                  "
-                >
-                  <div
-                    style="
-                      color: #d4a843;
-                      font-size: 12px;
-                      font-weight: 700;
-                      letter-spacing: 3px;
-                      margin-bottom: 10px;
-                    "
-                  >
-                    IFY'S SIGNATURE
-                  </div>
-
-                  <h1
-                    style="
-                      margin: 0;
-                      color: #ffffff;
-                      font-size: 26px;
-                      line-height: 1.3;
-                    "
-                  >
-                    New Quote Request
-                  </h1>
-
-                  <p
-                    style="
-                      margin: 10px 0 0;
-                      color: rgba(255, 255, 255, 0.7);
-                      font-size: 14px;
-                    "
-                  >
-                    A new catering inquiry has been submitted.
-                  </p>
-                </div>
-
-                <!-- INTRO -->
-
-                <div
-                  style="
-                    padding: 30px;
-                    border-bottom: 1px solid #e8e2d8;
-                  "
-                >
-                  <p
-                    style="
-                      margin: 0;
-                      font-size: 15px;
-                      line-height: 1.7;
-                      color: #444444;
-                    "
-                  >
-                    You have received a new quote request from
-                    <strong>${name}</strong>.
-                    Here are the event details:
-                  </p>
-                </div>
-
-                <!-- CUSTOMER DETAILS -->
-
-                <div style="padding: 30px;">
-                  <h2
-                    style="
-                      margin: 0 0 20px;
-                      color: #1a2e1a;
-                      font-size: 18px;
-                    "
-                  >
-                    Customer Details
-                  </h2>
-
-                  <table
-                    width="100%"
-                    cellpadding="0"
-                    cellspacing="0"
-                    style="
-                      border-collapse: collapse;
-                      font-size: 14px;
-                    "
-                  >
-                    <tr>
-                      <td
-                        style="
-                          padding: 11px 0;
-                          color: #777777;
-                          width: 40%;
-                          border-bottom: 1px solid #eee;
-                        "
-                      >
-                        Full Name
-                      </td>
-
-                      <td
-                        style="
-                          padding: 11px 0;
-                          color: #222222;
-                          font-weight: 600;
-                          border-bottom: 1px solid #eee;
-                        "
-                      >
-                        ${name}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style="
-                          padding: 11px 0;
-                          color: #777777;
-                          border-bottom: 1px solid #eee;
-                        "
-                      >
-                        Email
-                      </td>
-
-                      <td
-                        style="
-                          padding: 11px 0;
-                          border-bottom: 1px solid #eee;
-                        "
-                      >
-                        <a
-                          href="mailto:${email}"
-                          style="
-                            color: #2d4a2d;
-                            text-decoration: none;
-                          "
-                        >
-                          ${email}
-                        </a>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style="
-                          padding: 11px 0;
-                          color: #777777;
-                          border-bottom: 1px solid #eee;
-                        "
-                      >
-                        Phone
-                      </td>
-
-                      <td
-                        style="
-                          padding: 11px 0;
-                          border-bottom: 1px solid #eee;
-                        "
-                      >
-                        <a
-                          href="tel:${phone}"
-                          style="
-                            color: #2d4a2d;
-                            text-decoration: none;
-                          "
-                        >
-                          ${phone}
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-
-                <!-- EVENT DETAILS -->
-
-                <div
-                  style="
-                    margin: 0 30px 30px;
-                    padding: 25px;
-                    background: #f8f5ef;
-                    border-radius: 14px;
-                  "
-                >
-                  <h2
-                    style="
-                      margin: 0 0 20px;
-                      color: #1a2e1a;
-                      font-size: 18px;
-                    "
-                  >
-                    Event Details
-                  </h2>
-
-                  <table
-                    width="100%"
-                    cellpadding="0"
-                    cellspacing="0"
-                    style="
-                      border-collapse: collapse;
-                      font-size: 14px;
-                    "
-                  >
-                    <tr>
-                      <td
-                        style="
-                          padding: 8px 0;
-                          color: #777777;
-                        "
-                      >
-                        Event Type
-                      </td>
-
-                      <td
-                        style="
-                          padding: 8px 0;
-                          color: #222222;
-                          font-weight: 600;
-                        "
-                      >
-                        ${eventType}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style="
-                          padding: 8px 0;
-                          color: #777777;
-                        "
-                      >
-                        Event Date
-                      </td>
-
-                      <td
-                        style="
-                          padding: 8px 0;
-                          color: #222222;
-                          font-weight: 600;
-                        "
-                      >
-                        ${formattedDate}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style="
-                          padding: 8px 0;
-                          color: #777777;
-                        "
-                      >
-                        Number of Guests
-                      </td>
-
-                      <td
-                        style="
-                          padding: 8px 0;
-                          color: #222222;
-                          font-weight: 600;
-                        "
-                      >
-                        ${guests}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style="
-                          padding: 8px 0;
-                          color: #777777;
-                        "
-                      >
-                        Location
-                      </td>
-
-                      <td
-                        style="
-                          padding: 8px 0;
-                          color: #222222;
-                          font-weight: 600;
-                        "
-                      >
-                        ${safeLocation}
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-
-                <!-- MESSAGE -->
-
-                <div style="padding: 0 30px 30px;">
-                  <h2
-                    style="
-                      margin: 0 0 15px;
-                      color: #1a2e1a;
-                      font-size: 18px;
-                    "
-                  >
-                    Additional Details
-                  </h2>
-
-                  <div
-                    style="
-                      padding: 18px;
-                      background: #fafafa;
-                      border-left: 3px solid #d4a843;
-                      border-radius: 6px;
-                      color: #555555;
-                      font-size: 14px;
-                      line-height: 1.7;
-                    "
-                  >
-                    ${safeMessage}
-                  </div>
-                </div>
-
-                <!-- ACTION -->
-
-                <div
-                  style="
-                    padding: 25px 30px;
-                    background: #1a2e1a;
-                    text-align: center;
-                  "
-                >
-                  <a
-                    href="mailto:${email}"
-                    style="
-                      display: inline-block;
-                      padding: 12px 22px;
-                      background: #d4a843;
-                      color: #1a2e1a;
-                      border-radius: 999px;
-                      text-decoration: none;
-                      font-size: 13px;
-                      font-weight: 700;
-                    "
-                  >
-                    Reply to ${name}
-                  </a>
-                </div>
-
-              </div>
-            </div>
-          </body>
-        </html>
-      `,
-    });
-
-    if (error) {
-      console.error(
-        "RESEND QUOTE EMAIL ERROR:",
-        error
-      );
-
-      return res.status(500).json({
-        success: false,
-        message:
-          "Unable to send your quote request right now.",
-      });
-    }
 
     console.log(
       "QUOTE REQUEST EMAIL SENT:",
-      data?.id
+      emailResult?.id ||
+        "unknown"
     );
 
     return res.status(200).json({
       success: true,
+
       message:
         "Your quote request has been sent successfully.",
+
+      emailId:
+        emailResult?.id || null,
     });
   } catch (error) {
     console.error(
@@ -485,7 +542,9 @@ router.post("/quote", async (req, res) => {
 
     return res.status(500).json({
       success: false,
+
       message:
+        error?.message ||
         "Something went wrong while sending your request.",
     });
   }
