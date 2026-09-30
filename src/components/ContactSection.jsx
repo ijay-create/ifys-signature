@@ -1,14 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  AlertCircle,
   CalendarDays,
-  CheckCircle2,
-  ChevronDown,
   Clock3,
   ExternalLink,
   LoaderCircle,
-  MapPin,
   MessageCircle,
   PackageCheck,
   Send,
@@ -16,104 +12,67 @@ import {
   Truck,
 } from "lucide-react";
 
+import AlertModal from "../components/AlertModal";
 import "../styles/ContactSection.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  "http://localhost:5000";
-
-/* =========================================
-   DELIVERY LINKS
-========================================= */
+  "https://ifys-signature-api.onrender.com";
 
 const UBER_EATS_URL = "https://www.ubereats.com/";
 const DOORDASH_URL = "https://www.doordash.com/";
 
-/* =========================================
-   PAN OPTIONS
-========================================= */
+const PAN_PRICES = {
+  small: 45,
+  medium: 65,
+  large: 100,
+};
 
-const panOptions = [
-  {
-    id: "small",
-    name: "Small Pan",
-    price: 45,
-    description: "Perfect for smaller gatherings",
+const PROTEIN_PRICES = {
+  chicken: {
+    small: 8,
+    medium: 14,
+    large: 20,
   },
-  {
-    id: "medium",
-    name: "Medium Pan",
-    price: 65,
-    description: "Great for family-sized events",
+  shrimp: {
+    small: 12,
+    medium: 20,
+    large: 30,
   },
-  {
-    id: "large",
-    name: "Large Pan",
-    price: 100,
-    description: "Ideal for larger gatherings",
+  beef: {
+    small: 10,
+    medium: 17,
+    large: 24,
   },
-];
+  mixed: {
+    small: 18,
+    medium: 30,
+    large: 42,
+  },
+};
 
-/* =========================================
-   PROTEIN OPTIONS
-========================================= */
-
-const proteinOptions = [
+const PROTEIN_OPTIONS = [
   {
-    id: "chicken",
-    name: "Chicken",
-    prices: {
-      Small: 8,
-      Medium: 14,
-      Large: 20,
-    },
+    key: "chicken",
+    label: "Chicken",
   },
   {
-    id: "shrimp",
-    name: "Shrimp",
-    prices: {
-      Small: 12,
-      Medium: 20,
-      Large: 30,
-    },
+    key: "shrimp",
+    label: "Shrimp",
   },
   {
-    id: "beef",
-    name: "Beef",
-    prices: {
-      Small: 10,
-      Medium: 17,
-      Large: 24,
-    },
+    key: "beef",
+    label: "Beef",
   },
   {
-    id: "mixed",
-    name: "Mixed",
-    prices: {
-      Small: 18,
-      Medium: 30,
-      Large: 42,
-    },
+    key: "mixed",
+    label: "Mixed Protein",
   },
 ];
 
-const proteinSizes = ["Small", "Medium", "Large"];
+const SPICE_LEVELS = ["Mild", "Medium", "Hot"];
 
-/* =========================================
-   SPICE OPTIONS
-========================================= */
-
-const spiceOptions = [
-  "Mild",
-  "Medium",
-  "Hot",
-];
-
-/* =========================================
-   ALLERGY OPTIONS
-========================================= */
-
-const allergyOptions = [
+const ALLERGY_OPTIONS = [
   "None",
   "Peanuts",
   "Tree Nuts",
@@ -124,11 +83,7 @@ const allergyOptions = [
   "Other",
 ];
 
-/* =========================================
-   EVENT OPTIONS
-========================================= */
-
-const eventOptions = [
+const EVENT_OPTIONS = [
   "Birthday",
   "Wedding",
   "Graduation",
@@ -137,36 +92,28 @@ const eventOptions = [
   "Other",
 ];
 
-/* =========================================
-   SERVICE OPTIONS
-========================================= */
-
-const serviceOptions = [
+const SERVICE_OPTIONS = [
   {
-    id: "delivery",
-    label: "Delivery",
-    description:
-      "Fridays, Saturdays & Sundays before 3 PM",
+    value: "delivery",
+    label: "Weekend Delivery",
+    description: "Food delivered on Saturday or Sunday.",
+    icon: Truck,
   },
   {
-    id: "pickup",
+    value: "pickup",
     label: "Self Pickup",
-    description:
-      "Pick up your order yourself",
+    description: "Collect your order from us.",
+    icon: Store,
   },
   {
-    id: "late",
-    label: "Late Order",
-    description:
-      "Additional charge may apply",
+    value: "late",
+    label: "Express / Late Order",
+    description: "For orders with less than 7 days' notice.",
+    icon: Clock3,
   },
 ];
 
-/* =========================================
-   INITIAL FORM
-========================================= */
-
-const initialForm = {
+const createInitialFormData = () => ({
   name: "",
   email: "",
   phone: "",
@@ -191,1576 +138,1091 @@ const initialForm = {
   deliveryPlatform: "",
 
   message: "",
+});
+
+const formatDateForInput = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 };
 
-const ContactSection = ({
-  selectedEvent = "",
-}) => {
-  const [formData, setFormData] =
-    useState(initialForm);
+const getTodayDate = () => {
+  const date = new Date();
 
-  const [isSubmitted, setIsSubmitted] =
-    useState(false);
+  date.setHours(0, 0, 0, 0);
 
-  const [isSending, setIsSending] =
-    useState(false);
+  return formatDateForInput(date);
+};
 
-  const [errorMessage, setErrorMessage] =
-    useState("");
+const getMinimumBookingDate = () => {
+  const date = new Date();
 
-  /* =========================================
-     PRESELECT EVENT
-  ========================================= */
+  date.setHours(0, 0, 0, 0);
+  date.setDate(date.getDate() + 7);
 
-  useEffect(() => {
-    if (!selectedEvent) {
-      return;
-    }
+  return formatDateForInput(date);
+};
 
-    const eventMap = {
-      Birthdays: "Birthday",
-      Weddings: "Wedding",
-      Graduations: "Graduation",
-      "Baby Showers": "Baby Shower",
-      "Corporate Events": "Corporate Event",
-      "And More!": "Other",
-    };
+const isWeekendDate = (dateString) => {
+  if (!dateString) {
+    return false;
+  }
 
-    const mappedEvent =
-      eventMap[selectedEvent] ||
-      selectedEvent;
+  const date = new Date(`${dateString}T00:00:00`);
+  const day = date.getDay();
 
-    setFormData((currentForm) => ({
-      ...currentForm,
-      eventType: eventOptions.includes(
-        mappedEvent
-      )
-        ? mappedEvent
-        : "Other",
-    }));
+  return day === 0 || day === 6;
+};
 
-    setIsSubmitted(false);
-    setErrorMessage("");
-  }, [selectedEvent]);
+const formatDisplayDate = (dateString) => {
+  if (!dateString) {
+    return "";
+  }
 
-  /* =========================================
-     HANDLE CHANGE
-  ========================================= */
+  const date = new Date(`${dateString}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+};
+
+const ContactSection = () => {
+  const [formData, setFormData] = useState(createInitialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const [alertModal, setAlertModal] = useState({
+    open: false,
+    type: "error",
+    message: "",
+  });
+
+  const todayDate = useMemo(() => getTodayDate(), []);
+  const minimumBookingDate = useMemo(
+    () => getMinimumBookingDate(),
+    []
+  );
+
+  const totalPans = useMemo(() => {
+    return (
+      Number(formData.smallPans || 0) +
+      Number(formData.mediumPans || 0) +
+      Number(formData.largePans || 0)
+    );
+  }, [
+    formData.smallPans,
+    formData.mediumPans,
+    formData.largePans,
+  ]);
+
+  const panSubtotal = useMemo(() => {
+    return (
+      Number(formData.smallPans || 0) * PAN_PRICES.small +
+      Number(formData.mediumPans || 0) * PAN_PRICES.medium +
+      Number(formData.largePans || 0) * PAN_PRICES.large
+    );
+  }, [
+    formData.smallPans,
+    formData.mediumPans,
+    formData.largePans,
+  ]);
+
+  const proteinTotal = useMemo(() => {
+    let total = 0;
+
+    PROTEIN_OPTIONS.forEach(({ key }) => {
+      const selectedSize = formData[`${key}Size`];
+
+      if (!selectedSize) {
+        return;
+      }
+
+      total += PROTEIN_PRICES[key][selectedSize] || 0;
+    });
+
+    return total;
+  }, [
+    formData.chickenSize,
+    formData.shrimpSize,
+    formData.beefSize,
+    formData.mixedSize,
+  ]);
+
+  const estimatedTotal = panSubtotal + proteinTotal;
+
+  const showAlertModal = (message, type = "error") => {
+    setAlertModal({
+      open: true,
+      type,
+      message,
+    });
+  };
+
+  const closeAlertModal = () => {
+    setAlertModal({
+      open: false,
+      type: "error",
+      message: "",
+    });
+  };
 
   const handleChange = (event) => {
-    const {
-      name,
-      value,
-    } = event.target;
+    const { name, value } = event.target;
 
-    setFormData((currentForm) => ({
-      ...currentForm,
+    setFormData((previous) => ({
+      ...previous,
       [name]: value,
     }));
 
-    setIsSubmitted(false);
-    setErrorMessage("");
-  };
-
-  /* =========================================
-     PAN QUANTITY
-  ========================================= */
-
-  const updatePanQuantity = (
-    panId,
-    change
-  ) => {
-    const fieldMap = {
-      small: "smallPans",
-      medium: "mediumPans",
-      large: "largePans",
-    };
-
-    const fieldName =
-      fieldMap[panId];
-
-    if (!fieldName) {
-      return;
+    if (name === "serviceOption") {
+      setFormData((previous) => ({
+        ...previous,
+        serviceOption: value,
+        deliveryPlatform:
+          value === "delivery"
+            ? previous.deliveryPlatform
+            : "",
+      }));
     }
 
-    setFormData((currentForm) => ({
-      ...currentForm,
-      [fieldName]: Math.min(
-        Math.max(
-          Number(currentForm[fieldName]) +
-            change,
-          0
-        ),
-        50
-      ),
-    }));
-
-    setIsSubmitted(false);
-    setErrorMessage("");
+    if (name === "eventDate") {
+      setIsSuccess(false);
+    }
   };
 
-  /* =========================================
-     PROTEIN TOGGLE
-  ========================================= */
+  const handlePanChange = (size, value) => {
+    const numericValue = Math.max(
+      0,
+      Number.parseInt(value, 10) || 0
+    );
 
-  const toggleProtein = (
-    proteinId
-  ) => {
-    const fieldMap = {
-      chicken: "chickenSize",
-      shrimp: "shrimpSize",
-      beef: "beefSize",
-      mixed: "mixedSize",
-    };
+    setFormData((previous) => ({
+      ...previous,
+      [`${size}Pans`]: numericValue,
+    }));
+  };
 
-    const fieldName =
-      fieldMap[proteinId];
+  const handleProteinChange = (protein, size) => {
+    setFormData((previous) => ({
+      ...previous,
+      [`${protein}Size`]: size,
+    }));
+  };
 
-    if (!fieldName) {
-      return;
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      return "Please enter your name.";
     }
 
-    setFormData((currentForm) => ({
-      ...currentForm,
-      [fieldName]:
-        currentForm[fieldName]
-          ? ""
-          : "Medium",
-    }));
+    if (!formData.email.trim()) {
+      return "Please enter your email address.";
+    }
 
-    setIsSubmitted(false);
-    setErrorMessage("");
+    if (!formData.phone.trim()) {
+      return "Please enter your phone number.";
+    }
+
+    if (!formData.eventType) {
+      return "Please select an event type.";
+    }
+
+    if (!formData.eventDate) {
+      return "Please select the date you want your food delivered.";
+    }
+
+    if (!isWeekendDate(formData.eventDate)) {
+      return "Please choose a Saturday or Sunday for your food delivery date. You can book your order ahead of time on any day.";
+    }
+
+    if (
+      formData.eventDate < minimumBookingDate &&
+      formData.serviceOption !== "late"
+    ) {
+      return "Standard orders require at least 7 days' notice. Please choose a weekend date at least 7 days from today, or select Express / Late Order.";
+    }
+
+    if (totalPans < 1) {
+      return "Please select at least one pan.";
+    }
+
+    if (!formData.spiceLevel) {
+      return "Please select your preferred spice level.";
+    }
+
+    if (!formData.serviceOption) {
+      return "Please select delivery, pickup, or express/late order.";
+    }
+
+    if (
+      formData.serviceOption === "delivery" &&
+      !formData.deliveryPlatform
+    ) {
+      return "Please select your preferred delivery platform.";
+    }
+
+    return "";
   };
-
-  /* =========================================
-     CALCULATE TOTAL
-  ========================================= */
-
-  const estimatedTotal = useMemo(() => {
-    const panTotal =
-      Number(formData.smallPans) * 45 +
-      Number(formData.mediumPans) * 65 +
-      Number(formData.largePans) * 100;
-
-    const proteinTotal =
-      (formData.chickenSize
-        ? proteinOptions.find(
-            (protein) =>
-              protein.id === "chicken"
-          )?.prices[
-            formData.chickenSize
-          ] || 0
-        : 0) +
-      (formData.shrimpSize
-        ? proteinOptions.find(
-            (protein) =>
-              protein.id === "shrimp"
-          )?.prices[
-            formData.shrimpSize
-          ] || 0
-        : 0) +
-      (formData.beefSize
-        ? proteinOptions.find(
-            (protein) =>
-              protein.id === "beef"
-          )?.prices[
-            formData.beefSize
-          ] || 0
-        : 0) +
-      (formData.mixedSize
-        ? proteinOptions.find(
-            (protein) =>
-              protein.id === "mixed"
-          )?.prices[
-            formData.mixedSize
-          ] || 0
-        : 0);
-
-    return panTotal + proteinTotal;
-  }, [formData]);
-
-  /* =========================================
-     TOTAL PAN COUNT
-  ========================================= */
-
-  const totalPans =
-    Number(formData.smallPans) +
-    Number(formData.mediumPans) +
-    Number(formData.largePans);
-
-  /* =========================================
-     SUBMIT
-  ========================================= */
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (isSending) {
+    const validationError = validateForm();
+
+    if (validationError) {
+      showAlertModal(validationError, "error");
       return;
     }
 
-    if (totalPans < 1) {
-      setErrorMessage(
-        "Please select at least one pan."
-      );
-      return;
-    }
-
-    if (!formData.spiceLevel) {
-      setErrorMessage(
-        "Please select your preferred spice level."
-      );
-      return;
-    }
-
-    if (!formData.serviceOption) {
-      setErrorMessage(
-        "Please select a delivery or pickup option."
-      );
-      return;
-    }
-
-    if (
-      formData.serviceOption ===
-        "delivery" &&
-      !formData.deliveryPlatform
-    ) {
-      setErrorMessage(
-        "Please select Uber Eats or DoorDash for delivery."
-      );
-      return;
-    }
-
-    setIsSending(true);
-    setErrorMessage("");
-    setIsSubmitted(false);
+    setIsSubmitting(true);
+    setIsSuccess(false);
 
     try {
+      const payload = {
+        ...formData,
+
+        smallPans: Number(formData.smallPans || 0),
+        mediumPans: Number(formData.mediumPans || 0),
+        largePans: Number(formData.largePans || 0),
+
+        totalPans,
+
+        panSubtotal,
+        proteinTotal,
+        estimatedTotal,
+
+        eventDateDisplay: formatDisplayDate(
+          formData.eventDate
+        ),
+      };
+
       const response = await fetch(
         `${API_URL}/api/contact/quote`,
         {
           method: "POST",
           headers: {
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            ...formData,
-            totalPans,
-            estimatedTotal,
-          }),
+          body: JSON.stringify(payload),
         }
       );
 
-      const result =
-        await response.json();
+      let data = {};
 
-      if (
-        !response.ok ||
-        !result.success
-      ) {
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
+
+      if (!response.ok) {
         throw new Error(
-          result.message ||
-            "Unable to send your request."
+          data.message ||
+            "We couldn't send your quote request. Please try again."
         );
       }
 
-      setIsSubmitted(true);
-      setFormData(initialForm);
-    } catch (error) {
-      console.error(
-        "QUOTE REQUEST ERROR:",
-        error
-      );
+      setFormData(createInitialFormData());
+      setIsSuccess(true);
 
-      setErrorMessage(
-        error.message ||
-          "Something went wrong. Please try again."
+      showAlertModal(
+        "Your quote request has been sent successfully. We’ll review your order and get back to you shortly.",
+        "success"
       );
+    } catch (error) {
+      const errorMessage =
+        error.message ||
+        "We couldn't send your request. Please try again.";
+
+      showAlertModal(errorMessage, "error");
     } finally {
-      setIsSending(false);
+      setIsSubmitting(false);
     }
   };
 
-  return (
-    <section
-      className="contact-section"
-      id="contact"
-    >
-      <div className="contact-section-inner">
+  if (isSuccess) {
+    return (
+      <>
+        <AlertModal
+          open={alertModal.open}
+          type={alertModal.type}
+          message={alertModal.message}
+          onClose={closeAlertModal}
+        />
 
-        {/* ========================================
-            LEFT SIDE
-        ======================================== */}
-
-        <motion.div
-          className="contact-intro"
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.2,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+        <section
+          className="contact-section"
+          id="contact"
         >
-          <span className="section-label">
-            BOOKINGS & ORDERS
-          </span>
-
-          <h2>
-            Let's make your
-            <span>
-              event delicious.
-            </span>
-          </h2>
-
-          <p>
-            Tell us what you need and we'll
-            help you plan your fried rice order
-            around your event date, pan sizes,
-            proteins, spice level, and delivery
-            preference.
-          </p>
-
-          {/* BOOKING NOTICE */}
-
-          <div className="booking-notice">
-            <div className="booking-notice-icon">
-              <CalendarDays
-                size={21}
-                strokeWidth={1.7}
-              />
-            </div>
-
-            <div>
-              <span className="booking-notice-label">
-                BOOKINGS
-              </span>
-
-              <h3>
-                Book at least one week
-                before your event.
-              </h3>
-
-              <p>
-                We're available to receive
-                booking requests Sunday through
-                Saturday.
-              </p>
-            </div>
-          </div>
-
-          {/* AVAILABILITY */}
-
-          <div className="service-info-list">
-
-            <div className="service-info-item">
-              <span className="service-info-icon">
-                <Truck
-                  size={18}
-                  strokeWidth={1.8}
-                />
-              </span>
-
-              <div>
-                <strong>
-                  Delivery
-                </strong>
-
-                <span>
-                  Fridays, Saturdays &
-                  Sundays before 3 PM.
-                </span>
-              </div>
-            </div>
-
-            <div className="service-info-item">
-              <span className="service-info-icon">
-                <Store
-                  size={18}
-                  strokeWidth={1.8}
-                />
-              </span>
-
-              <div>
-                <strong>
-                  Pick-up by self
-                </strong>
-
-                <span>
-                  Prefer to collect your
-                  order? Self pickup is
-                  available.
-                </span>
-              </div>
-            </div>
-
-            <div className="service-info-item service-info-item-warning">
-              <span className="service-info-icon">
-                <Clock3
-                  size={18}
-                  strokeWidth={1.8}
-                />
-              </span>
-
-              <div>
-                <strong>
-                  Late orders
-                </strong>
-
-                <span>
-                  Late requests may require
-                  an additional charge.
-                </span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* DELIVERY PARTNERS */}
-
-          <div className="delivery-platforms">
-            <div className="delivery-platforms-heading">
-              <span>
-                ORDER FOR DELIVERY
-              </span>
-
-              <p>
-                For delivery orders, choose
-                your preferred delivery partner.
-              </p>
-            </div>
-
-            <div className="delivery-platform-links">
-
-              <a
-                href={UBER_EATS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="delivery-platform-link uber-link"
-              >
-                <span className="delivery-brand-mark uber-mark">
-                  U
-                </span>
-
-                <span className="delivery-platform-copy">
-                  <strong>
-                    Uber Eats
-                  </strong>
-
-                  <small>
-                    Order online
-                  </small>
-                </span>
-
-                <ExternalLink
-                  size={15}
-                  strokeWidth={1.8}
-                />
-              </a>
-
-              <a
-                href={DOORDASH_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="delivery-platform-link doordash-link"
-              >
-                <span className="delivery-brand-mark doordash-mark">
-                  D
-                </span>
-
-                <span className="delivery-platform-copy">
-                  <strong>
-                    DoorDash
-                  </strong>
-
-                  <small>
-                    Order online
-                  </small>
-                </span>
-
-                <ExternalLink
-                  size={15}
-                  strokeWidth={1.8}
-                />
-              </a>
-
-            </div>
-          </div>
-
-          {/* NOTE */}
-
-          <div className="contact-note">
-            <span className="contact-note-line" />
-
-            <p>
-              Need help deciding what to
-              order? Send us your details and
-              we'll help you plan it.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* ========================================
-            RIGHT SIDE FORM
-        ======================================== */}
-
-        <motion.div
-          className="contact-form-card"
-          initial={{
-            opacity: 0,
-            y: 25,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.15,
-          }}
-          transition={{
-            duration: 0.6,
-            delay: 0.1,
-          }}
-        >
-          {isSubmitted ? (
+          <div className="contact-container">
             <motion.div
-              className="quote-success"
+              className="contact-success"
               initial={{
                 opacity: 0,
-                scale: 0.96,
+                y: 30,
               }}
               animate={{
                 opacity: 1,
-                scale: 1,
-              }}
-              transition={{
-                duration: 0.4,
+                y: 0,
               }}
             >
-              <div className="quote-success-icon">
-                <CheckCircle2
-                  size={42}
-                  strokeWidth={1.6}
-                />
+              <div className="success-icon">
+                <PackageCheck size={34} />
               </div>
 
-              <span className="quote-success-eyebrow">
-                REQUEST RECEIVED
+              <span className="contact-eyebrow">
+                Request Received
               </span>
 
-              <h3>
-                Thank you!
-              </h3>
+              <h2>
+                Thank You for Choosing{" "}
+                <span>Ify’s</span>
+              </h2>
 
               <p>
-                We've received your booking
-                request and order preferences.
-                We'll review everything and get
-                back to you shortly.
+                Your quote request has been received. We’ll
+                review your order details and contact you
+                shortly.
               </p>
 
               <button
                 type="button"
-                className="quote-reset-button"
+                className="contact-reset-button"
                 onClick={() => {
-                  setIsSubmitted(false);
-                  setErrorMessage("");
+                  setIsSuccess(false);
+                  closeAlertModal();
                 }}
               >
-                Send Another Request
+                Submit Another Request
               </button>
             </motion.div>
-          ) : (
-            <form
-              className="quote-form"
-              onSubmit={handleSubmit}
-            >
-              <div className="quote-form-heading">
-                <span>
-                  BUILD YOUR ORDER
-                </span>
+          </div>
+        </section>
+      </>
+    );
+  }
 
-                <h3>
-                  Tell us what you need
-                </h3>
+  return (
+    <>
+      <AlertModal
+        open={alertModal.open}
+        type={alertModal.type}
+        message={alertModal.message}
+        onClose={closeAlertModal}
+      />
 
-                <p>
-                  Choose your pans, proteins,
-                  spice level and delivery
-                  preference below.
-                </p>
-              </div>
+      <section
+        className="contact-section"
+        id="contact"
+      >
+        <div className="contact-container">
+          <motion.div
+            className="contact-heading"
+            initial={{
+              opacity: 0,
+              y: 30,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.7,
+            }}
+          >
+            <span className="contact-eyebrow">
+              Let’s Make It Delicious
+            </span>
 
-              {/* ERROR */}
+            <h2>
+              Request a{" "}
+              <span>Quote</span>
+            </h2>
 
-              {errorMessage && (
-                <motion.div
-                  className="quote-error"
-                  initial={{
-                    opacity: 0,
-                    y: -8,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                >
-                  <AlertCircle
-                    size={18}
-                    strokeWidth={1.8}
-                  />
+            <p>
+              Tell us about your event and order
+              requirements. We’ll review everything and
+              get back to you with your quote.
+            </p>
+          </motion.div>
 
-                  <span>
-                    {errorMessage}
-                  </span>
-                </motion.div>
-              )}
-
-              {/* ========================================
-                  CUSTOMER DETAILS
-              ======================================== */}
-
-              <div className="form-section-heading">
-                <span>
-                  01
-                </span>
+          <motion.div
+            className="contact-layout"
+            initial={{
+              opacity: 0,
+              y: 40,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.1,
+            }}
+            transition={{
+              duration: 0.7,
+              delay: 0.1,
+            }}
+          >
+            <div className="contact-info">
+              <div className="contact-info-card">
+                <div className="contact-info-icon">
+                  <MessageCircle size={22} />
+                </div>
 
                 <div>
-                  <strong>
-                    Your details
-                  </strong>
-
-                  <small>
-                    How can we reach you?
-                  </small>
+                  <span>Need Help?</span>
+                  <h3>Let’s Talk About Your Event</h3>
+                  <p>
+                    Whether it’s a birthday, wedding,
+                    graduation, corporate gathering or
+                    something special, we’re happy to help
+                    you plan the right quantity.
+                  </p>
                 </div>
               </div>
 
-              <div className="quote-form-grid">
-
-                <div className="form-field">
-                  <label htmlFor="name">
-                    Full Name{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Your full name"
-                    required
-                    disabled={isSending}
-                  />
+              <div className="contact-info-card">
+                <div className="contact-info-icon">
+                  <CalendarDays size={22} />
                 </div>
 
-                <div className="form-field">
-                  <label htmlFor="email">
-                    Email Address{" "}
-                    <span>*</span>
-                  </label>
+                <div>
+                  <span>Booking Notice</span>
+                  <h3>Plan Ahead</h3>
+                  <p>
+                    Standard orders require at least 7
+                    days’ notice. Express / Late Orders
+                    may be requested for shorter notice.
+                  </p>
+                </div>
+              </div>
 
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="you@example.com"
-                    required
-                    disabled={isSending}
-                  />
+              <div className="contact-info-card">
+                <div className="contact-info-icon">
+                  <Truck size={22} />
                 </div>
 
-                <div className="form-field">
-                  <label htmlFor="phone">
-                    Phone Number{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="Your phone number"
-                    required
-                    disabled={isSending}
-                  />
+                <div>
+                  <span>Weekend Delivery</span>
+                  <h3>Saturday & Sunday</h3>
+                  <p>
+                    Food delivery is scheduled for
+                    weekends. You can submit your booking
+                    request ahead of time on any day.
+                  </p>
                 </div>
+              </div>
 
-                <div className="form-field">
-                  <label htmlFor="eventType">
-                    Event Type{" "}
-                    <span>*</span>
-                  </label>
+              <div className="delivery-platforms">
+                <span>Order Through</span>
 
-                  <select
-                    id="eventType"
-                    name="eventType"
-                    value={formData.eventType}
-                    onChange={handleChange}
-                    required
-                    disabled={isSending}
+                <div className="platform-links">
+                  <a
+                    href={UBER_EATS_URL}
+                    target="_blank"
+                    rel="noreferrer"
                   >
-                    <option
-                      value=""
-                      disabled
-                    >
-                      Select your event
-                    </option>
+                    Uber Eats
+                    <ExternalLink size={14} />
+                  </a>
 
-                    {eventOptions.map(
-                      (option) => (
-                        <option
-                          key={option}
-                          value={option}
-                        >
-                          {option}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="eventDate">
-                    Event Date{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    id="eventDate"
-                    name="eventDate"
-                    type="date"
-                    value={formData.eventDate}
-                    onChange={handleChange}
-                    required
-                    disabled={isSending}
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="location">
-                    Event / Delivery Location{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    id="location"
-                    name="location"
-                    type="text"
-                    value={formData.location}
-                    onChange={handleChange}
-                    placeholder="Delivery or event address"
-                    required
-                    disabled={isSending}
-                  />
+                  <a
+                    href={DOORDASH_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    DoorDash
+                    <ExternalLink size={14} />
+                  </a>
                 </div>
               </div>
+            </div>
 
-              {/* ========================================
-                  PANS
-              ======================================== */}
+            <form
+              className="contact-form"
+              onSubmit={handleSubmit}
+              noValidate
+            >
+              <div className="form-section">
+                <div className="form-section-heading">
+                  <span>01</span>
 
-              <div className="form-section-heading order-section-heading">
-                <span>
-                  02
-                </span>
-
-                <div>
-                  <strong>
-                    Choose your pans
-                  </strong>
-
-                  <small>
-                    Select how many pans you need.
-                  </small>
+                  <div>
+                    <h3>Your Details</h3>
+                    <p>
+                      Tell us how we can reach you.
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="pan-selection-grid">
-                {panOptions.map(
-                  (pan) => {
-                    const quantityMap = {
-                      small:
-                        formData.smallPans,
-                      medium:
-                        formData.mediumPans,
-                      large:
-                        formData.largePans,
-                    };
-
-                    const quantity =
-                      quantityMap[pan.id] || 0;
-
-                    return (
-                      <div
-                        key={pan.id}
-                        className={`pan-selection-card ${
-                          quantity > 0
-                            ? "selected"
-                            : ""
-                        }`}
-                      >
-                        <div className="pan-selection-top">
-                          <div>
-                            <span className="pan-selection-name">
-                              {pan.name}
-                            </span>
-
-                            <span className="pan-selection-description">
-                              {pan.description}
-                            </span>
-                          </div>
-
-                          <strong className="pan-selection-price">
-                            ${pan.price}
-                          </strong>
-                        </div>
-
-                        <div className="pan-selection-bottom">
-                          <span>
-                            Quantity
-                          </span>
-
-                          <div className="quantity-control">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updatePanQuantity(
-                                  pan.id,
-                                  -1
-                                )
-                              }
-                              disabled={
-                                quantity === 0 ||
-                                isSending
-                              }
-                              aria-label={`Remove one ${pan.name}`}
-                            >
-                              −
-                            </button>
-
-                            <strong>
-                              {quantity}
-                            </strong>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updatePanQuantity(
-                                  pan.id,
-                                  1
-                                )
-                              }
-                              disabled={isSending}
-                              aria-label={`Add one ${pan.name}`}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  }
-                )}
-              </div>
-
-              <div className="pan-total-summary">
-                <span>
-                  Total pans selected
-                </span>
-
-                <strong>
-                  {totalPans}
-                </strong>
-              </div>
-
-              {/* ========================================
-                  PROTEINS
-              ======================================== */}
-
-              <div className="form-section-heading order-section-heading">
-                <span>
-                  03
-                </span>
-
-                <div>
-                  <strong>
-                    Choose your proteins
-                  </strong>
-
-                  <small>
-                    Select a protein and size.
-                  </small>
-                </div>
-              </div>
-
-              <div className="protein-selection-list">
-                {proteinOptions.map(
-                  (protein) => {
-                    const fieldMap = {
-                      chicken:
-                        "chickenSize",
-                      shrimp:
-                        "shrimpSize",
-                      beef:
-                        "beefSize",
-                      mixed:
-                        "mixedSize",
-                    };
-
-                    const fieldName =
-                      fieldMap[protein.id];
-
-                    const selectedSize =
-                      formData[fieldName];
-
-                    return (
-                      <div
-                        key={protein.id}
-                        className={`protein-selection-card ${
-                          selectedSize
-                            ? "selected"
-                            : ""
-                        }`}
-                      >
-                        <button
-                          type="button"
-                          className="protein-selection-header"
-                          onClick={() =>
-                            toggleProtein(
-                              protein.id
-                            )
-                          }
-                        >
-                          <span className="protein-selection-check">
-                            {selectedSize
-                              ? "✓"
-                              : ""}
-                          </span>
-
-                          <span className="protein-selection-name">
-                            {protein.name}
-                          </span>
-
-                          <span className="protein-selection-toggle">
-                            {selectedSize
-                              ? "Selected"
-                              : "Select"}
-                          </span>
-                        </button>
-
-                        {selectedSize && (
-                          <div className="protein-size-options">
-                            {proteinSizes.map(
-                              (size) => (
-                                <label
-                                  key={size}
-                                  className={`protein-size-option ${
-                                    selectedSize ===
-                                    size
-                                      ? "active"
-                                      : ""
-                                  }`}
-                                >
-                                  <input
-                                    type="radio"
-                                    name={fieldName}
-                                    value={size}
-                                    checked={
-                                      selectedSize ===
-                                      size
-                                    }
-                                    onChange={
-                                      handleChange
-                                    }
-                                    disabled={
-                                      isSending
-                                    }
-                                  />
-
-                                  <span>
-                                    {size}
-                                  </span>
-
-                                  <strong>
-                                    $
-                                    {
-                                      protein
-                                        .prices[
-                                        size
-                                      ]
-                                    }
-                                  </strong>
-                                </label>
-                              )
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
-                )}
-              </div>
-
-              {/* ========================================
-                  SPICE
-              ======================================== */}
-
-              <div className="form-section-heading order-section-heading">
-                <span>
-                  04
-                </span>
-
-                <div>
-                  <strong>
-                    Spice level
-                  </strong>
-
-                  <small>
-                    How spicy would you like it?
-                  </small>
-                </div>
-              </div>
-
-              <div className="choice-grid spice-grid">
-                {spiceOptions.map(
-                  (option) => (
-                    <label
-                      key={option}
-                      className={`choice-card ${
-                        formData.spiceLevel ===
-                        option
-                          ? "active"
-                          : ""
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="spiceLevel"
-                        value={option}
-                        checked={
-                          formData.spiceLevel ===
-                          option
-                        }
-                        onChange={handleChange}
-                        disabled={isSending}
-                      />
-
-                      <span className="choice-card-check">
-                        {formData.spiceLevel ===
-                        option
-                          ? "✓"
-                          : ""}
-                      </span>
-
-                      <span>
-                        {option}
-                      </span>
+                <div className="form-grid">
+                  <div className="form-field">
+                    <label htmlFor="name">
+                      Full Name
                     </label>
-                  )
-                )}
-              </div>
 
-              {/* ========================================
-                  ALLERGIES
-              ======================================== */}
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Your full name"
+                    />
+                  </div>
 
-              <div className="form-section-heading order-section-heading">
-                <span>
-                  05
-                </span>
+                  <div className="form-field">
+                    <label htmlFor="email">
+                      Email Address
+                    </label>
 
-                <div>
-                  <strong>
-                    Allergies & ingredients
-                  </strong>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="you@example.com"
+                    />
+                  </div>
 
-                  <small>
-                    Please tell us about any allergies.
-                  </small>
+                  <div className="form-field">
+                    <label htmlFor="phone">
+                      Phone Number
+                    </label>
+
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="080..."
+                    />
+                  </div>
+
+                  <div className="form-field">
+                    <label htmlFor="eventType">
+                      Event Type
+                    </label>
+
+                    <select
+                      id="eventType"
+                      name="eventType"
+                      value={formData.eventType}
+                      onChange={handleChange}
+                    >
+                      <option value="">
+                        Select event type
+                      </option>
+
+                      {EVENT_OPTIONS.map((eventType) => (
+                        <option
+                          key={eventType}
+                          value={eventType}
+                        >
+                          {eventType}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div className="form-field">
-                <label htmlFor="allergy">
-                  Do you have a food allergy?
-                  <span> *</span>
-                </label>
+              <div className="form-section">
+                <div className="form-section-heading">
+                  <span>02</span>
 
-                <select
-                  id="allergy"
-                  name="allergy"
-                  value={formData.allergy}
-                  onChange={handleChange}
-                  required
-                  disabled={isSending}
-                >
-                  {allergyOptions.map(
-                    (option) => (
-                      <option
-                        key={option}
-                        value={option}
+                  <div>
+                    <h3>Delivery Date</h3>
+                    <p>
+                      Select the weekend date you want your
+                      food delivered.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="form-grid">
+                  <div className="form-field">
+                    <label htmlFor="eventDate">
+                      Food Delivery Date
+                    </label>
+
+                    <input
+                      id="eventDate"
+                      name="eventDate"
+                      type="date"
+                      value={formData.eventDate}
+                      min={
+                        formData.serviceOption === "late"
+                          ? todayDate
+                          : minimumBookingDate
+                      }
+                      onChange={handleChange}
+                    />
+
+                    <small className="field-note">
+                      Food delivery is available on
+                      Saturdays and Sundays. Standard orders
+                      require 7 days’ notice.
+                    </small>
+                  </div>
+
+                  <div className="form-field">
+                    <label htmlFor="location">
+                      Delivery / Event Location
+                    </label>
+
+                    <input
+                      id="location"
+                      name="location"
+                      type="text"
+                      value={formData.location}
+                      onChange={handleChange}
+                      placeholder="Where should we deliver?"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <div className="form-section-heading">
+                  <span>03</span>
+
+                  <div>
+                    <h3>Choose Your Pans</h3>
+                    <p>
+                      Select how many pans of each size you
+                      need.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pan-selection-grid">
+                  <div className="pan-card">
+                    <div>
+                      <span className="pan-size">
+                        Small
+                      </span>
+
+                      <strong>
+                        ${PAN_PRICES.small}
+                      </strong>
+                    </div>
+
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.smallPans}
+                      onChange={(event) =>
+                        handlePanChange(
+                          "small",
+                          event.target.value
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="pan-card">
+                    <div>
+                      <span className="pan-size">
+                        Medium
+                      </span>
+
+                      <strong>
+                        ${PAN_PRICES.medium}
+                      </strong>
+                    </div>
+
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.mediumPans}
+                      onChange={(event) =>
+                        handlePanChange(
+                          "medium",
+                          event.target.value
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="pan-card">
+                    <div>
+                      <span className="pan-size">
+                        Large
+                      </span>
+
+                      <strong>
+                        ${PAN_PRICES.large}
+                      </strong>
+                    </div>
+
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.largePans}
+                      onChange={(event) =>
+                        handlePanChange(
+                          "large",
+                          event.target.value
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <div className="form-section-heading">
+                  <span>04</span>
+
+                  <div>
+                    <h3>Add Your Protein</h3>
+                    <p>
+                      Choose the protein size you want with
+                      your order.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="protein-selection">
+                  {PROTEIN_OPTIONS.map(
+                    ({ key, label }) => (
+                      <div
+                        className="protein-row"
+                        key={key}
                       >
-                        {option}
-                      </option>
+                        <div className="protein-name">
+                          <span>{label}</span>
+                        </div>
+
+                        <div className="protein-options">
+                          {["small", "medium", "large"].map(
+                            (size) => (
+                              <label
+                                className="protein-option"
+                                key={size}
+                              >
+                                <input
+                                  type="radio"
+                                  name={`${key}Size`}
+                                  value={size}
+                                  checked={
+                                    formData[
+                                      `${key}Size`
+                                    ] === size
+                                  }
+                                  onChange={() =>
+                                    handleProteinChange(
+                                      key,
+                                      size
+                                    )
+                                  }
+                                />
+
+                                <span>
+                                  {size
+                                    .charAt(0)
+                                    .toUpperCase() +
+                                    size.slice(1)}
+                                  {" +$"}
+                                  {
+                                    PROTEIN_PRICES[key][
+                                      size
+                                    ]
+                                  }
+                                </span>
+                              </label>
+                            )
+                          )}
+                        </div>
+                      </div>
                     )
                   )}
-                </select>
+                </div>
               </div>
 
-              {formData.allergy !==
-                "None" && (
-                <div className="allergy-alert">
-                  <AlertCircle
-                    size={18}
-                    strokeWidth={1.8}
-                  />
+              <div className="form-section">
+                <div className="form-section-heading">
+                  <span>05</span>
 
                   <div>
-                    <strong>
-                      Allergy information
-                    </strong>
-
-                    <span>
-                      Please provide as much detail
-                      as possible below so we can
-                      review your request carefully.
-                    </span>
+                    <h3>Flavor & Dietary Needs</h3>
+                    <p>
+                      Help us prepare your order exactly
+                      how you like it.
+                    </p>
                   </div>
                 </div>
-              )}
 
-              <div className="form-field form-field-full allergy-field">
-                <label htmlFor="excludedIngredients">
-                  Ingredients to Avoid
-                </label>
+                <div className="form-grid">
+                  <div className="form-field">
+                    <label htmlFor="spiceLevel">
+                      Spice Level
+                    </label>
 
-                <input
-                  id="excludedIngredients"
-                  name="excludedIngredients"
-                  type="text"
-                  value={
-                    formData.excludedIngredients
-                  }
-                  onChange={handleChange}
-                  placeholder="e.g. peanuts, onions, eggs..."
-                  disabled={isSending}
-                />
-              </div>
+                    <select
+                      id="spiceLevel"
+                      name="spiceLevel"
+                      value={formData.spiceLevel}
+                      onChange={handleChange}
+                    >
+                      <option value="">
+                        Select spice level
+                      </option>
 
-              {/* ========================================
-                  DELIVERY
-              ======================================== */}
+                      {SPICE_LEVELS.map((level) => (
+                        <option
+                          key={level}
+                          value={level}
+                        >
+                          {level}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="form-section-heading order-section-heading">
-                <span>
-                  06
-                </span>
+                  <div className="form-field">
+                    <label htmlFor="allergy">
+                      Allergies
+                    </label>
 
-                <div>
-                  <strong>
-                    Delivery or pickup
-                  </strong>
+                    <select
+                      id="allergy"
+                      name="allergy"
+                      value={formData.allergy}
+                      onChange={handleChange}
+                    >
+                      {ALLERGY_OPTIONS.map((allergy) => (
+                        <option
+                          key={allergy}
+                          value={allergy}
+                        >
+                          {allergy}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                  <small>
-                    Choose how you'd like to receive
-                    your order.
-                  </small>
+                  <div className="form-field form-field-full">
+                    <label htmlFor="excludedIngredients">
+                      Ingredients to Exclude
+                    </label>
+
+                    <input
+                      id="excludedIngredients"
+                      name="excludedIngredients"
+                      type="text"
+                      value={
+                        formData.excludedIngredients
+                      }
+                      onChange={handleChange}
+                      placeholder="Anything else we should leave out?"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="service-choice-grid">
-                {serviceOptions.map(
-                  (option) => (
-                    <label
-                      key={option.id}
-                      className={`service-choice-card ${
-                        formData.serviceOption ===
-                        option.id
-                          ? "active"
-                          : ""
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="serviceOption"
-                        value={option.id}
-                        checked={
-                          formData.serviceOption ===
-                          option.id
-                        }
-                        onChange={
-                          handleChange
-                        }
-                        disabled={isSending}
-                      />
+              <div className="form-section">
+                <div className="form-section-heading">
+                  <span>06</span>
 
-                      <span className="service-choice-icon">
-                        {option.id ===
-                          "delivery" && (
-                          <Truck
-                            size={21}
-                            strokeWidth={1.7}
-                          />
-                        )}
+                  <div>
+                    <h3>Delivery Method</h3>
+                    <p>
+                      Choose how you would like to receive
+                      your order.
+                    </p>
+                  </div>
+                </div>
 
-                        {option.id ===
-                          "pickup" && (
-                          <Store
-                            size={21}
-                            strokeWidth={1.7}
-                          />
-                        )}
+                <div className="service-options">
+                  {SERVICE_OPTIONS.map(
+                    ({
+                      value,
+                      label,
+                      description,
+                      icon: Icon,
+                    }) => (
+                      <label
+                        className={`service-option ${
+                          formData.serviceOption === value
+                            ? "service-option-active"
+                            : ""
+                        }`}
+                        key={value}
+                      >
+                        <input
+                          type="radio"
+                          name="serviceOption"
+                          value={value}
+                          checked={
+                            formData.serviceOption ===
+                            value
+                          }
+                          onChange={handleChange}
+                        />
 
-                        {option.id ===
-                          "late" && (
-                          <Clock3
-                            size={21}
-                            strokeWidth={1.7}
-                          />
-                        )}
-                      </span>
+                        <span className="service-icon">
+                          <Icon size={20} />
+                        </span>
 
-                      <span className="service-choice-content">
-                        <strong>
-                          {option.label}
-                        </strong>
+                        <span className="service-copy">
+                          <strong>{label}</strong>
+                          <small>{description}</small>
+                        </span>
+                      </label>
+                    )
+                  )}
+                </div>
 
-                        <small>
-                          {option.description}
-                        </small>
-                      </span>
-
-                      <span className="service-choice-radio">
-                        {formData.serviceOption ===
-                        option.id
-                          ? "✓"
-                          : ""}
-                      </span>
+                {formData.serviceOption ===
+                  "delivery" && (
+                  <motion.div
+                    className="delivery-platform-field"
+                    initial={{
+                      opacity: 0,
+                      height: 0,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      height: "auto",
+                    }}
+                  >
+                    <label htmlFor="deliveryPlatform">
+                      Preferred Delivery Platform
                     </label>
-                  )
+
+                    <select
+                      id="deliveryPlatform"
+                      name="deliveryPlatform"
+                      value={formData.deliveryPlatform}
+                      onChange={handleChange}
+                    >
+                      <option value="">
+                        Select delivery platform
+                      </option>
+
+                      <option value="Uber Eats">
+                        Uber Eats
+                      </option>
+
+                      <option value="DoorDash">
+                        DoorDash
+                      </option>
+                    </select>
+                  </motion.div>
                 )}
               </div>
 
-              {/* DELIVERY PARTNER */}
-
-              {formData.serviceOption ===
-                "delivery" && (
-                <motion.div
-                  className="delivery-partner-selection"
-                  initial={{
-                    opacity: 0,
-                    height: 0,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    height: "auto",
-                  }}
-                >
-                  <div className="delivery-partner-heading">
-                    <span>
-                      DELIVERY PARTNER
-                    </span>
-
-                    <p>
-                      Select your preferred
-                      delivery service.
-                    </p>
-                  </div>
-
-                  <div className="delivery-partner-grid">
-
-                    <label
-                      className={`delivery-partner-card ${
-                        formData.deliveryPlatform ===
-                        "Uber Eats"
-                          ? "active"
-                          : ""
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="deliveryPlatform"
-                        value="Uber Eats"
-                        checked={
-                          formData.deliveryPlatform ===
-                          "Uber Eats"
-                        }
-                        onChange={
-                          handleChange
-                        }
-                        disabled={isSending}
-                      />
-
-                      <span className="delivery-brand-mark uber-mark">
-                        U
-                      </span>
-
-                      <span>
-                        <strong>
-                          Uber Eats
-                        </strong>
-
-                        <small>
-                          Preferred delivery
-                        </small>
-                      </span>
-
-                      <span className="delivery-radio">
-                        {formData.deliveryPlatform ===
-                        "Uber Eats"
-                          ? "✓"
-                          : ""}
-                      </span>
-                    </label>
-
-                    <label
-                      className={`delivery-partner-card ${
-                        formData.deliveryPlatform ===
-                        "DoorDash"
-                          ? "active"
-                          : ""
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="deliveryPlatform"
-                        value="DoorDash"
-                        checked={
-                          formData.deliveryPlatform ===
-                          "DoorDash"
-                        }
-                        onChange={
-                          handleChange
-                        }
-                        disabled={isSending}
-                      />
-
-                      <span className="delivery-brand-mark doordash-mark">
-                        D
-                      </span>
-
-                      <span>
-                        <strong>
-                          DoorDash
-                        </strong>
-
-                        <small>
-                          Preferred delivery
-                        </small>
-                      </span>
-
-                      <span className="delivery-radio">
-                        {formData.deliveryPlatform ===
-                        "DoorDash"
-                          ? "✓"
-                          : ""}
-                      </span>
-                    </label>
-
-                  </div>
-
-                  <p className="delivery-note">
-                    You can also order directly
-                    through the delivery platforms
-                    using the links above.
-                  </p>
-                </motion.div>
-              )}
-
-              {/* LATE ORDER NOTICE */}
-
-              {formData.serviceOption ===
-                "late" && (
-                <motion.div
-                  className="late-order-notice"
-                  initial={{
-                    opacity: 0,
-                    y: -5,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                >
-                  <Clock3
-                    size={19}
-                    strokeWidth={1.8}
-                  />
+              <div className="form-section">
+                <div className="form-section-heading">
+                  <span>07</span>
 
                   <div>
-                    <strong>
-                      Late order selected
-                    </strong>
-
+                    <h3>Anything Else?</h3>
                     <p>
-                      Late orders may incur an
-                      additional charge. We'll
-                      confirm the applicable charge
-                      with you before your order is
-                      finalized.
+                      Add any additional information about
+                      your order or event.
                     </p>
                   </div>
-                </motion.div>
-              )}
-
-              {/* ========================================
-                  ADDITIONAL DETAILS
-              ======================================== */}
-
-              <div className="form-section-heading order-section-heading">
-                <span>
-                  07
-                </span>
-
-                <div>
-                  <strong>
-                    Anything else?
-                  </strong>
-
-                  <small>
-                    Add any additional information.
-                  </small>
                 </div>
-              </div>
 
-              <div className="form-field form-field-full">
-                <label htmlFor="message">
-                  Additional Details
-                </label>
+                <div className="form-field form-field-full">
+                  <label htmlFor="message">
+                    Additional Message
+                  </label>
 
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="5"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell us anything else we should know about your event, order, timing, delivery, or special requests..."
-                  disabled={isSending}
-                />
-              </div>
-
-              {/* ========================================
-                  ORDER SUMMARY
-              ======================================== */}
-
-              <div className="order-estimate">
-                <div className="order-estimate-heading">
-                  <span>
-                    ESTIMATED ORDER
-                  </span>
-
-                  <MessageCircle
-                    size={17}
-                    strokeWidth={1.8}
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell us anything else we should know..."
                   />
                 </div>
+              </div>
 
-                <div className="order-estimate-row">
-                  <span>
-                    Pans
-                  </span>
-
+              <div className="order-summary">
+                <div className="summary-heading">
+                  <span>Order Summary</span>
                   <strong>
-                    {totalPans}
+                    {totalPans}{" "}
+                    {totalPans === 1
+                      ? "Pan"
+                      : "Pans"}
                   </strong>
                 </div>
 
-                <div className="order-estimate-row">
-                  <span>
-                    Selected proteins
-                  </span>
-
+                <div className="summary-row">
+                  <span>Pan Subtotal</span>
                   <strong>
-                    {
-                      [
-                        formData.chickenSize,
-                        formData.shrimpSize,
-                        formData.beefSize,
-                        formData.mixedSize,
-                      ].filter(Boolean).length
-                    }
+                    ${panSubtotal.toFixed(2)}
                   </strong>
                 </div>
 
-                <div className="order-estimate-total">
-                  <span>
-                    Estimated subtotal
-                  </span>
+                <div className="summary-row">
+                  <span>Protein Add-ons</span>
+                  <strong>
+                    ${proteinTotal.toFixed(2)}
+                  </strong>
+                </div>
 
+                <div className="summary-total">
+                  <span>Estimated Total</span>
                   <strong>
                     ${estimatedTotal.toFixed(2)}
                   </strong>
                 </div>
 
-                <p>
-                  Final pricing may vary based on
-                  delivery, late-order charges, and
-                  any additional requirements.
+                <p className="summary-note">
+                  Final pricing may vary depending on your
+                  confirmed order requirements.
                 </p>
               </div>
 
-              {/* ========================================
-                  SUBMIT
-              ======================================== */}
-
               <button
                 type="submit"
-                className="quote-submit-button"
-                disabled={isSending}
+                className="contact-submit-button"
+                disabled={isSubmitting}
               >
-                {isSending ? (
+                {isSubmitting ? (
                   <>
-                    <span>
-                      Sending Request...
-                    </span>
-
                     <LoaderCircle
-                      className="quote-loading-icon"
-                      size={17}
-                      strokeWidth={2}
+                      size={19}
+                      className="submit-spinner"
                     />
+
+                    Sending Request...
                   </>
                 ) : (
                   <>
-                    <span>
-                      Request My Quote
-                    </span>
-
-                    <Send
-                      size={17}
-                      strokeWidth={2}
-                    />
+                    <Send size={18} />
+                    Request My Quote
                   </>
                 )}
               </button>
-
-              <p className="quote-form-footnote">
-                We'll use the information you
-                provide only to respond to your
-                booking or quote request.
-              </p>
             </form>
-          )}
-        </motion.div>
-      </div>
-    </section>
+          </motion.div>
+        </div>
+      </section>
+    </>
   );
 };
 
