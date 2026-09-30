@@ -33,11 +33,19 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "https://ifys-signature.vercel.app",
+  "https://ifyssignaturefriedrice.com",
+  "https://www.ifyssignaturefriedrice.com",
 ];
 
 if (process.env.CLIENT_URL) {
   allowedOrigins.push(process.env.CLIENT_URL);
 }
+
+/*
+  Remove duplicate origins
+*/
+
+const uniqueAllowedOrigins = [...new Set(allowedOrigins)];
 
 /*
   CORS
@@ -55,7 +63,7 @@ app.use(
         return callback(null, true);
       }
 
-      if (allowedOrigins.includes(origin)) {
+      if (uniqueAllowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
@@ -158,6 +166,6 @@ app.listen(PORT, () => {
 
   console.log(
     "Allowed frontend origins:",
-    allowedOrigins
+    uniqueAllowedOrigins
   );
 });
