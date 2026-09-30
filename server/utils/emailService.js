@@ -6,7 +6,7 @@ const resend = new Resend(
 
 const FROM_EMAIL =
   process.env.FROM_EMAIL ||
-  "Ify's Signature <onboarding@resend.dev>";
+  "Ify's Signature <hello@ifyssignaturefriedrice.com>";
 
 /* =========================================================
    SHARED HELPERS
@@ -25,16 +25,11 @@ const normalizeArray = (value) => {
   if (Array.isArray(value)) {
     return value
       .map((item) => {
-        if (
-          typeof item === "string"
-        ) {
+        if (typeof item === "string") {
           return item.trim();
         }
 
-        if (
-          item &&
-          typeof item === "object"
-        ) {
+        if (item && typeof item === "object") {
           return Object.entries(item)
             .map(
               ([key, itemValue]) =>
@@ -43,9 +38,7 @@ const normalizeArray = (value) => {
             .join(" — ");
         }
 
-        return String(
-          item || ""
-        ).trim();
+        return String(item || "").trim();
       })
       .filter(Boolean);
   }
@@ -57,10 +50,7 @@ const normalizeArray = (value) => {
     return [value.trim()];
   }
 
-  if (
-    value &&
-    typeof value === "object"
-  ) {
+  if (value && typeof value === "object") {
     return Object.entries(value)
       .map(
         ([key, itemValue]) =>
@@ -79,9 +69,7 @@ const formatList = (
   const normalizedItems =
     normalizeArray(items);
 
-  if (
-    normalizedItems.length === 0
-  ) {
+  if (normalizedItems.length === 0) {
     return `
       <span style="
         color: #777777;
@@ -115,9 +103,7 @@ const formatList = (
    PAN FORMATTER
 ========================================================= */
 
-const formatPanRows = (
-  pans
-) => {
+const formatPanRows = (pans) => {
   if (
     !Array.isArray(pans) ||
     pans.length === 0
@@ -206,9 +192,7 @@ const formatPanRows = (
    PROTEIN FORMATTER
 ========================================================= */
 
-const formatProteinRows = (
-  proteins
-) => {
+const formatProteinRows = (proteins) => {
   if (
     !Array.isArray(proteins) ||
     proteins.length === 0
@@ -305,15 +289,11 @@ const formatDeliveryMethod = (
     return "Not selected";
   }
 
-  if (
-    value.includes("uber")
-  ) {
+  if (value.includes("uber")) {
     return "Uber Eats";
   }
 
-  if (
-    value.includes("door")
-  ) {
+  if (value.includes("door")) {
     return "DoorDash";
   }
 
@@ -325,15 +305,11 @@ const formatDeliveryMethod = (
     return "Self Pick-Up";
   }
 
-  if (
-    value.includes("delivery")
-  ) {
+  if (value.includes("delivery")) {
     return "Delivery";
   }
 
-  if (
-    value.includes("late")
-  ) {
+  if (value.includes("late")) {
     return "Late Order";
   }
 
@@ -405,9 +381,7 @@ const formatDescription = (
     )
     .filter(Boolean);
 
-  if (
-    parts.length === 0
-  ) {
+  if (parts.length === 0) {
     return "";
   }
 
@@ -496,9 +470,7 @@ const createCustomerItemsHtml = (
       ? items
       : [];
 
-  if (
-    safeItems.length === 0
-  ) {
+  if (safeItems.length === 0) {
     return `
       <tr>
         <td
@@ -590,9 +562,7 @@ const createBusinessItemsHtml = (
       ? items
       : [];
 
-  if (
-    safeItems.length === 0
-  ) {
+  if (safeItems.length === 0) {
     return `
       <div style="
         padding: 18px;
@@ -1285,10 +1255,6 @@ export const sendQuoteRequestEmail =
     totalPans,
     estimatedTotal,
   }) => {
-    /* =====================================================
-       ADMIN EMAIL
-    ===================================================== */
-
     const adminEmail =
       process.env.ADMIN_EMAIL;
 
@@ -1298,19 +1264,11 @@ export const sendQuoteRequestEmail =
       );
     }
 
-    /* =====================================================
-       RESEND API KEY
-    ===================================================== */
-
     if (!process.env.RESEND_API_KEY) {
       throw new Error(
         "RESEND_API_KEY is not configured."
       );
     }
-
-    /* =====================================================
-       REQUIRED FIELDS
-    ===================================================== */
 
     if (
       !name ||
@@ -1323,10 +1281,6 @@ export const sendQuoteRequestEmail =
         "Missing required quote request fields."
       );
     }
-
-    /* =====================================================
-       NORMALIZE DATA
-    ===================================================== */
 
     const selectedPans =
       pans ||
@@ -1373,10 +1327,6 @@ export const sendQuoteRequestEmail =
         ? Number(estimatedTotal)
         : 0;
 
-    /* =====================================================
-       DATE
-    ===================================================== */
-
     const parsedEventDate =
       new Date(
         `${eventDate}T00:00:00`
@@ -1400,10 +1350,6 @@ export const sendQuoteRequestEmail =
                 "numeric",
             }
           );
-
-    /* =====================================================
-       SAFE VALUES
-    ===================================================== */
 
     const safeName =
       escapeHtml(
@@ -1484,10 +1430,6 @@ export const sendQuoteRequestEmail =
         ).trim()
       );
 
-    /* =====================================================
-       PAN / PROTEIN COUNTS
-    ===================================================== */
-
     const normalizedPans =
       normalizeArray(
         selectedPans
@@ -1513,10 +1455,6 @@ export const sendQuoteRequestEmail =
       formatProteinRows(
         selectedProteins
       );
-
-    /* =====================================================
-       SEND QUOTE EMAIL
-    ===================================================== */
 
     const {
       data,
@@ -1582,8 +1520,6 @@ export const sendQuoteRequestEmail =
                   rgba(0, 0, 0, 0.08);
               ">
 
-                <!-- HEADER -->
-
                 <div style="
                   background: #1a2e1a;
                   padding: 38px 30px;
@@ -1627,8 +1563,6 @@ export const sendQuoteRequestEmail =
 
                 </div>
 
-                <!-- INTRO -->
-
                 <div style="
                   padding: 30px;
                   border-bottom:
@@ -1651,8 +1585,6 @@ export const sendQuoteRequestEmail =
                   </p>
 
                 </div>
-
-                <!-- CUSTOMER DETAILS -->
 
                 <div style="
                   padding: 30px;
@@ -1767,8 +1699,6 @@ export const sendQuoteRequestEmail =
 
                 </div>
 
-                <!-- EVENT DETAILS -->
-
                 <div style="
                   margin: 0 30px 25px;
                   padding: 25px;
@@ -1856,8 +1786,6 @@ export const sendQuoteRequestEmail =
                   </table>
 
                 </div>
-
-                <!-- PAN SELECTION -->
 
                 <div style="
                   margin: 0 30px 25px;
@@ -1949,16 +1877,12 @@ export const sendQuoteRequestEmail =
                     </thead>
 
                     <tbody>
-
                       ${panRows}
-
                     </tbody>
 
                   </table>
 
                 </div>
-
-                <!-- QUOTE ESTIMATE -->
 
                 <div style="
                   margin: 0 30px 25px;
@@ -2079,8 +2003,6 @@ export const sendQuoteRequestEmail =
 
                 </div>
 
-                <!-- PROTEINS -->
-
                 <div style="
                   margin: 0 30px 25px;
                   padding: 25px;
@@ -2112,8 +2034,6 @@ export const sendQuoteRequestEmail =
                   ${proteinHtml}
 
                 </div>
-
-                <!-- FOOD PREFERENCES -->
 
                 <div style="
                   margin: 0 30px 25px;
@@ -2213,8 +2133,6 @@ export const sendQuoteRequestEmail =
 
                 </div>
 
-                <!-- DELIVERY -->
-
                 <div style="
                   margin: 0 30px 25px;
                   padding: 25px;
@@ -2311,8 +2229,6 @@ export const sendQuoteRequestEmail =
 
                 </div>
 
-                <!-- ADDITIONAL MESSAGE -->
-
                 <div style="
                   padding: 0 30px 30px;
                 ">
@@ -2339,8 +2255,6 @@ export const sendQuoteRequestEmail =
                   </div>
 
                 </div>
-
-                <!-- ACTION -->
 
                 <div style="
                   padding: 28px 30px;
