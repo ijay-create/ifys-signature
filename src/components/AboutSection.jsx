@@ -21,8 +21,8 @@ const contactDetails = [
   {
     icon: Mail,
     label: "Email",
-    value: "nwabaraifunanya3@gmail.com",
-    href: "mailto:nwabaraifunanya3@gmail.com",
+    value: "ifyssignaturefriedrice@gmail.com",
+    href: "mailto:ifyssignaturefriedrice@gmail.com",
   },
 ];
 

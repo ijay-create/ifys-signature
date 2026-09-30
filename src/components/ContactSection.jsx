@@ -15,9 +15,24 @@ import {
 import AlertModal from "../components/AlertModal";
 import "../styles/ContactSection.css";
 
+/*
+|--------------------------------------------------------------------------
+| API CONFIGURATION
+|--------------------------------------------------------------------------
+| Local development:
+|   http://localhost:5000
+|
+| Production:
+|   https://ifys-signature-api.onrender.com
+|
+| You can override both with VITE_API_URL in your .env file.
+|--------------------------------------------------------------------------
+*/
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  "https://ifys-signature-api.onrender.com";
+  (import.meta.env.DEV
+    ? "http://localhost:5000"
+    : "https://ifys-signature-api.onrender.com");
 
 const UBER_EATS_URL = "https://www.ubereats.com/";
 const DOORDASH_URL = "https://www.doordash.com/";
@@ -207,6 +222,7 @@ const ContactSection = () => {
   });
 
   const todayDate = useMemo(() => getTodayDate(), []);
+
   const minimumBookingDate = useMemo(
     () => getMinimumBookingDate(),
     []
@@ -278,21 +294,21 @@ const ContactSection = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    setFormData((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
-
-    if (name === "serviceOption") {
-      setFormData((previous) => ({
+    setFormData((previous) => {
+      const updatedData = {
         ...previous,
-        serviceOption: value,
-        deliveryPlatform:
+        [name]: value,
+      };
+
+      if (name === "serviceOption") {
+        updatedData.deliveryPlatform =
           value === "delivery"
             ? previous.deliveryPlatform
-            : "",
-      }));
-    }
+            : "";
+      }
+
+      return updatedData;
+    });
 
     if (name === "eventDate") {
       setIsSuccess(false);
@@ -394,7 +410,6 @@ const ContactSection = () => {
         largePans: Number(formData.largePans || 0),
 
         totalPans,
-
         panSubtotal,
         proteinTotal,
         estimatedTotal,
@@ -912,44 +927,46 @@ const ContactSection = () => {
                         </div>
 
                         <div className="protein-options">
-                          {["small", "medium", "large"].map(
-                            (size) => (
-                              <label
-                                className="protein-option"
-                                key={size}
-                              >
-                                <input
-                                  type="radio"
-                                  name={`${key}Size`}
-                                  value={size}
-                                  checked={
-                                    formData[
-                                      `${key}Size`
-                                    ] === size
-                                  }
-                                  onChange={() =>
-                                    handleProteinChange(
-                                      key,
-                                      size
-                                    )
-                                  }
-                                />
+                          {[
+                            "small",
+                            "medium",
+                            "large",
+                          ].map((size) => (
+                            <label
+                              className="protein-option"
+                              key={size}
+                            >
+                              <input
+                                type="radio"
+                                name={`${key}Size`}
+                                value={size}
+                                checked={
+                                  formData[
+                                    `${key}Size`
+                                  ] === size
+                                }
+                                onChange={() =>
+                                  handleProteinChange(
+                                    key,
+                                    size
+                                  )
+                                }
+                              />
 
-                                <span>
-                                  {size
-                                    .charAt(0)
-                                    .toUpperCase() +
-                                    size.slice(1)}
-                                  {" +$"}
-                                  {
-                                    PROTEIN_PRICES[key][
-                                      size
-                                    ]
-                                  }
-                                </span>
-                              </label>
-                            )
-                          )}
+                              <span>
+                                {size
+                                  .charAt(0)
+                                  .toUpperCase() +
+                                  size.slice(1)}
+                                {" +$"}
+                                {
+                                  PROTEIN_PRICES[key][
+                                    size
+                                  ]
+                                }
+                              </span>
+                            </label>
+                          ))}
                         </div>
                       </div>
                     )
@@ -1162,16 +1179,16 @@ const ContactSection = () => {
               <div className="order-summary">
                 <div className="summary-heading">
                   <span>Order Summary</span>
+
                   <strong>
                     {totalPans}{" "}
-                    {totalPans === 1
-                      ? "Pan"
-                      : "Pans"}
+                    {totalPans === 1 ? "Pan" : "Pans"}
                   </strong>
                 </div>
 
                 <div className="summary-row">
                   <span>Pan Subtotal</span>
+
                   <strong>
                     ${panSubtotal.toFixed(2)}
                   </strong>
@@ -1179,6 +1196,7 @@ const ContactSection = () => {
 
                 <div className="summary-row">
                   <span>Protein Add-ons</span>
+
                   <strong>
                     ${proteinTotal.toFixed(2)}
                   </strong>
@@ -1186,6 +1204,7 @@ const ContactSection = () => {
 
                 <div className="summary-total">
                   <span>Estimated Total</span>
+
                   <strong>
                     ${estimatedTotal.toFixed(2)}
                   </strong>

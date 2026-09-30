@@ -90,22 +90,13 @@ const normalizeDeliveryPlatform = (value) => {
 
 router.post("/quote", async (req, res) => {
   try {
-    console.log(
-      "========================================"
-    );
-
-    console.log(
-      "QUOTE ROUTE HIT"
-    );
-
+    console.log("========================================");
+    console.log("QUOTE ROUTE HIT");
     console.log(
       "QUOTE BODY:",
       JSON.stringify(req.body, null, 2)
     );
-
-    console.log(
-      "========================================"
-    );
+    console.log("========================================");
 
     const {
       name,
@@ -132,8 +123,6 @@ router.post("/quote", async (req, res) => {
       deliveryPlatform,
 
       message,
-
-      totalPans,
       estimatedTotal,
     } = req.body;
 
@@ -144,53 +133,42 @@ router.post("/quote", async (req, res) => {
     const cleanName = cleanString(name);
     const cleanEmail = cleanString(email);
     const cleanPhone = cleanString(phone);
-
-    const cleanEventType =
-      cleanString(eventType);
-
-    const cleanEventDate =
-      cleanString(eventDate);
-
-    const cleanLocation =
-      cleanString(location);
+    const cleanEventType = cleanString(eventType);
+    const cleanEventDate = cleanString(eventDate);
+    const cleanLocation = cleanString(location);
 
     if (!cleanName) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please enter your full name.",
+        message: "Please enter your full name.",
       });
     }
 
     if (!cleanEmail) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please enter your email address.",
+        message: "Please enter your email address.",
       });
     }
 
     if (!cleanPhone) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please enter your phone number.",
+        message: "Please enter your phone number.",
       });
     }
 
     if (!cleanEventType) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please select your event type.",
+        message: "Please select your event type.",
       });
     }
 
     if (!cleanEventDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please select your event date.",
+        message: "Please select your event date.",
       });
     }
 
@@ -198,14 +176,9 @@ router.post("/quote", async (req, res) => {
        PAN COUNTS
     ========================================= */
 
-    const parsedSmallPans =
-      parsePanQuantity(smallPans);
-
-    const parsedMediumPans =
-      parsePanQuantity(mediumPans);
-
-    const parsedLargePans =
-      parsePanQuantity(largePans);
+    const parsedSmallPans = parsePanQuantity(smallPans);
+    const parsedMediumPans = parsePanQuantity(mediumPans);
+    const parsedLargePans = parsePanQuantity(largePans);
 
     const calculatedTotalPans =
       parsedSmallPans +
@@ -215,8 +188,7 @@ router.post("/quote", async (req, res) => {
     if (calculatedTotalPans < 1) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please select at least one pan.",
+        message: "Please select at least one pan.",
       });
     }
 
@@ -224,8 +196,7 @@ router.post("/quote", async (req, res) => {
        SPICE LEVEL
     ========================================= */
 
-    const cleanSpiceLevel =
-      cleanString(spiceLevel);
+    const cleanSpiceLevel = cleanString(spiceLevel);
 
     if (!cleanSpiceLevel) {
       return res.status(400).json({
@@ -240,9 +211,7 @@ router.post("/quote", async (req, res) => {
     ========================================= */
 
     const normalizedServiceOption =
-      normalizeServiceOption(
-        serviceOption
-      );
+      normalizeServiceOption(serviceOption);
 
     if (!normalizedServiceOption) {
       return res.status(400).json({
@@ -269,13 +238,10 @@ router.post("/quote", async (req, res) => {
     ========================================= */
 
     const normalizedDeliveryPlatform =
-      normalizeDeliveryPlatform(
-        deliveryPlatform
-      );
+      normalizeDeliveryPlatform(deliveryPlatform);
 
     if (
-      normalizedServiceOption ===
-        "delivery" &&
+      normalizedServiceOption === "delivery" &&
       !normalizedDeliveryPlatform
     ) {
       return res.status(400).json({
@@ -366,61 +332,33 @@ router.post("/quote", async (req, res) => {
         name: proteinName,
         size: normalizedSize,
         price:
-          proteinPrices[
-            proteinName
-          ]?.[normalizedSize] || 0,
+          proteinPrices[proteinName]?.[
+            normalizedSize
+          ] || 0,
       });
     };
 
-    addProtein(
-      "Chicken",
-      chickenSize
-    );
-
-    addProtein(
-      "Shrimp",
-      shrimpSize
-    );
-
-    addProtein(
-      "Beef",
-      beefSize
-    );
-
-    addProtein(
-      "Mixed",
-      mixedSize
-    );
+    addProtein("Chicken", chickenSize);
+    addProtein("Shrimp", shrimpSize);
+    addProtein("Beef", beefSize);
+    addProtein("Mixed", mixedSize);
 
     /* =========================================
        DELIVERY METHOD
     ========================================= */
 
-    let deliveryMethod =
-      "Not specified";
+    let deliveryMethod = "Not specified";
 
-    if (
-      normalizedServiceOption ===
-      "delivery"
-    ) {
-      deliveryMethod =
-        normalizedDeliveryPlatform;
+    if (normalizedServiceOption === "delivery") {
+      deliveryMethod = normalizedDeliveryPlatform;
     }
 
-    if (
-      normalizedServiceOption ===
-      "pickup"
-    ) {
-      deliveryMethod =
-        "Self Pick-Up";
+    if (normalizedServiceOption === "pickup") {
+      deliveryMethod = "Self Pick-Up";
     }
 
-    if (
-      normalizedServiceOption ===
-      "late"
-    ) {
-      deliveryMethod =
-        "Late Order";
+    if (normalizedServiceOption === "late") {
+      deliveryMethod = "Late Order";
     }
 
     /* =========================================
@@ -428,39 +366,31 @@ router.post("/quote", async (req, res) => {
     ========================================= */
 
     const lateOrder =
-      normalizedServiceOption ===
-      "late";
+      normalizedServiceOption === "late";
 
     /* =========================================
        OTHER DETAILS
     ========================================= */
 
     const cleanAllergy =
-      cleanString(allergy) ||
-      "None";
+      cleanString(allergy) || "None";
 
     const cleanExcludedIngredients =
-      cleanString(
-        excludedIngredients
-      );
+      cleanString(excludedIngredients);
 
-    const cleanMessage =
-      cleanString(message);
+    const cleanMessage = cleanString(message);
 
     /* =========================================
        TOTALS
     ========================================= */
 
-    const finalTotalPans =
-      calculatedTotalPans;
+    const finalTotalPans = calculatedTotalPans;
 
     const parsedEstimatedTotal =
       Number(estimatedTotal);
 
     const finalEstimatedTotal =
-      Number.isFinite(
-        parsedEstimatedTotal
-      ) &&
+      Number.isFinite(parsedEstimatedTotal) &&
       parsedEstimatedTotal >= 0
         ? parsedEstimatedTotal
         : 0;
@@ -472,29 +402,19 @@ router.post("/quote", async (req, res) => {
     const emailResult =
       await sendQuoteRequestEmail({
         name: cleanName,
-
         email: cleanEmail,
-
         phone: cleanPhone,
-
-        eventType:
-          cleanEventType,
-
-        eventDate:
-          cleanEventDate,
-
-        location:
-          cleanLocation,
+        eventType: cleanEventType,
+        eventDate: cleanEventDate,
+        location: cleanLocation,
 
         pans,
 
         proteinSelections,
 
-        spiceLevel:
-          cleanSpiceLevel,
+        spiceLevel: cleanSpiceLevel,
 
-        allergy:
-          cleanAllergy,
+        allergy: cleanAllergy,
 
         excludedIngredients:
           cleanExcludedIngredients,
@@ -509,11 +429,9 @@ router.post("/quote", async (req, res) => {
 
         lateOrder,
 
-        message:
-          cleanMessage,
+        message: cleanMessage,
 
-        totalPans:
-          finalTotalPans,
+        totalPans: finalTotalPans,
 
         estimatedTotal:
           finalEstimatedTotal,
@@ -521,18 +439,14 @@ router.post("/quote", async (req, res) => {
 
     console.log(
       "QUOTE REQUEST EMAIL SENT:",
-      emailResult?.id ||
-        "unknown"
+      emailResult?.id || "unknown"
     );
 
     return res.status(200).json({
       success: true,
-
       message:
         "Your quote request has been sent successfully.",
-
-      emailId:
-        emailResult?.id || null,
+      emailId: emailResult?.id || null,
     });
   } catch (error) {
     console.error(
@@ -542,7 +456,6 @@ router.post("/quote", async (req, res) => {
 
     return res.status(500).json({
       success: false,
-
       message:
         error?.message ||
         "Something went wrong while sending your request.",
