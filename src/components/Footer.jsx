@@ -415,7 +415,7 @@ const Footer = () => {
 
                 <span className="footer-contact-text">
                   <small>Email Me</small>
-                  nwabaraifunanya3@gmail.com
+                  ifyssignaturefriedrice@gmail.com
                 </span>
               </a>
 
